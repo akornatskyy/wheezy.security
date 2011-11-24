@@ -43,7 +43,10 @@ env:
 				-O env/pycrypto.tgz; \
 		fi; \
 	fi
-	$(EASY_INSTALL) -O2 env/pycrypto.tgz
+	if [ -z `find env/lib/python$(VERSION) -name '*.py' | \
+		xargs grep pycrypto` ]; then \
+		$(EASY_INSTALL) -O2 env/pycrypto.tgz; \
+	fi
 	$(PYTHON) setup.py develop -i $(PYPI)
 
 clean:
