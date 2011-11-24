@@ -1,5 +1,5 @@
-.SILENT: clean env doc release test
-.PHONY: clean env doc release test
+.SILENT: clean env doctest-cover test doc release
+.PHONY: clean env doctest-cover test doc release
 
 VERSION=2.6
 PYPI=http://pypi.python.org/simple
@@ -8,9 +8,9 @@ PYTHON=env/bin/python$(VERSION)
 EASY_INSTALL=env/bin/easy_install-$(VERSION)
 PYTEST=env/bin/py.test-$(VERSION)
 NOSE=env/bin/nosetests-$(VERSION)
-SPHINX=env/bin/sphinx-build
+SPHINX=/usr/bin/python /usr/bin/sphinx-build
 
-all: clean test release
+all: clean doctest-cover test release
 
 debian:
 	apt-get -yq update
@@ -36,10 +36,14 @@ env:
 	#	$(EASY_INSTALL) sphinx; \
 	#fi;
 	if [ ! -e env/pycrypto.tgz ]; then \
-		wget https://github.com/dlitz/pycrypto/tarball/py3k \
-			-O env/pycrypto.tgz; \
+		if [ -e $(PYPI)/pycrypto.tgz ]; then \
+			cp $(PYPI)/pycrypto.tgz env/ ;\
+		else \
+			wget https://github.com/dlitz/pycrypto/tarball/py3k \
+				-O env/pycrypto.tgz; \
+		fi; \
 	fi
-	$(EASY_INSTALL) env/pycrypto.tgz
+	$(EASY_INSTALL) -O2 env/pycrypto.tgz
 	$(PYTHON) setup.py develop -i $(PYPI)
 
 clean:
