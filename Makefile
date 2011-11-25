@@ -26,10 +26,10 @@ env:
 	if [ ! -x $$PYTHON_EXE ]; then \
 		PYTHON_EXE=/usr/bin/python$(VERSION); \
 	fi;\
-	virtualenv --python=$$PYTHON_EXE \
-		--no-site-packages env
 	VIRTUALENV_USE_SETUPTOOLS=1; \
 	export VIRTUALENV_USE_SETUPTOOLS; \
+	virtualenv --python=$$PYTHON_EXE \
+		--no-site-packages env
 	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
 		pytest-pep8 pytest-cov wsgiref
 	# The following packages available for python < 3.0
