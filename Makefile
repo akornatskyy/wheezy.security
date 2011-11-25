@@ -13,11 +13,11 @@ SPHINX=/usr/bin/python /usr/bin/sphinx-build
 all: clean doctest-cover test release
 
 debian:
-	apt-get -yq update
-	apt-get -yq dist-upgrade
+	apt-get -y update
+	apt-get -y dist-upgrade
 	# How to Compile Python from Source
 	# http://mindref.blogspot.com/2011/09/compile-python-from-source.html
-	apt-get -yq install libbz2-dev build-essential python \
+	apt-get -y install libbz2-dev build-essential python \
 		python-dev python-setuptools python-virtualenv \
 		python-sphinx mercurial
 
@@ -28,7 +28,8 @@ env:
 	fi;\
 	virtualenv --python=$$PYTHON_EXE \
 		--no-site-packages env
-	$(EASY_INSTALL) -i $(PYPI) -O2 -U distribute
+	VIRTUALENV_USE_SETUPTOOLS=1; \
+	export VIRTUALENV_USE_SETUPTOOLS; \
 	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
 		pytest-pep8 pytest-cov wsgiref
 	# The following packages available for python < 3.0
