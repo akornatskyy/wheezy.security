@@ -38,7 +38,7 @@ env:
 	fi
 	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
 		pytest-pep8 pytest-cov wsgiref
-	if [ "$$(ls $(PYPI)pycrypto*.egg)" ]; then \
+	if [ "$$(ls $(PYPI)/pycrypto*.egg)" ]; then \
 		$(EASY_INSTALL) -i $(PYPI) -O2 pycrypto; \
 	else \
 		if [ ! -e env/pycrypto.tgz ]; then \
