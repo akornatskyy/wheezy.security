@@ -56,15 +56,19 @@ class Ticket:
 
         >>> t = Ticket()
         >>> x = t.encode('hello')
-        >>> t.decode(x)
+        >>> text, time_left = t.decode(x)
+        >>> text
         'hello'
+        >>> assert time_left >= 0
 
         If cypher is not available verification is still applied.
 
         >>> t = Ticket(cypher=None)
         >>> x = t.encode('hello')
-        >>> t.decode(x)
+        >>> text, time_left = t.decode(x)
+        >>> text
         'hello'
+        >>> assert time_left >= 0
     """
 
     cypher = None
@@ -88,7 +92,7 @@ class Ticket:
         """ Encode ``value`` accoring to ticket policy.
         """
         value = ntob(value, encoding)
-        expires = pack('<i', self.timestamp())
+        expires = pack('<i', self.timestamp() + self.max_age)
         noise = urandom(12)
         value = b('').join((
             noise[:4],
@@ -110,37 +114,41 @@ class Ticket:
 
             >>> t = Ticket(cypher=None)
             >>> t.decode('abc')
+            (None, None)
 
             Signature is not valid
 
             >>> value = 'cf-0eDoyN6VwP-IyZap4zTBjsHqqaZua4MkG'
             >>> value += 'AA11HGdoZWxsbxBSjyg='
             >>> t.decode(b(value))
+            (None, None)
 
             Expired
 
             >>> value = '1ZRcHGsYENF~lzezpMKFFF9~QBCQkqPlIMoG'
             >>> value += 'AA11HGdoZWxsbxBSjyg='
             >>> t.decode(b(value))
+            (None, None)
         """
         if len(value) < 56:
-            return None
+            return (None, None)
         value = b64decode(value, BASE64_ALTCHARS)
         signature = value[:self.digest_size]
         value = value[self.digest_size:]
         if signature != self.sign(value):
-            return None
+            return (None, None)
         cypher = self.cypher
         if cypher:
             cypher = cypher()
             value = unpad(decrypt(cypher, value), self.block_size)
         expires, value = value[4:8], value[12:-4]
-        if unpack('<i', expires)[0] < self.timestamp():
-            return None
-        return bton(value, encoding)
+        time_left = unpack('<i', expires)[0] - self.timestamp()
+        if time_left < 0:
+            return (None, None)
+        return (bton(value, encoding), time_left)
 
     def timestamp(self):
-        return int(time()) - EPOCH + self.max_age
+        return int(time()) - EPOCH
 
     def sign(self, value):
         h = self.hmac.copy()
