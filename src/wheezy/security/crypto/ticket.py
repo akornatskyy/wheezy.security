@@ -54,10 +54,11 @@ class Ticket:
         is provided if available, by default it attempts to use AES
         cypher.
 
+        >>> from wheezy.security.crypto.comp import n
         >>> t = Ticket()
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
-        >>> text
+        >>> n(text)
         'hello'
         >>> assert time_left >= 0
 
@@ -66,7 +67,7 @@ class Ticket:
         >>> t = Ticket(cypher=None)
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
-        >>> text
+        >>> n(text)
         'hello'
         >>> assert time_left >= 0
     """
@@ -91,7 +92,7 @@ class Ticket:
     def encode(self, value, encoding='utf-8'):
         """ Encode ``value`` accoring to ticket policy.
         """
-        value = ntob(value, encoding)
+        value = value.encode(encoding)
         expires = pack('<i', self.timestamp() + self.max_age)
         noise = urandom(12)
         value = b('').join((
@@ -145,7 +146,7 @@ class Ticket:
         time_left = unpack('<i', expires)[0] - self.timestamp()
         if time_left < 0:
             return (None, None)
-        return (bton(value, encoding), time_left)
+        return (value.decode(encoding), time_left)
 
     def timestamp(self):
         return int(time()) - EPOCH

@@ -8,7 +8,6 @@ import sys
 PY3 = sys.version_info[0] >= 3
 
 if PY3:  # pragma: nocover
-    from io import BytesIO
 
     def ntob(n, encoding):
         """ Converts native string to bytes
@@ -23,10 +22,14 @@ if PY3:  # pragma: nocover
     chr = lambda i: bytes([i])
     ord = lambda b: b
     b = lambda s: s.encode('latin1')
-    n = lambda s: s.decode('latin1')
+
+    def n(s):
+        if isinstance(s, bytes):
+            return s.decode('latin1')
+        else:
+            return s
 
 else:  # pragma: nocover
-    from cStringIO import StringIO as BytesIO
 
     def ntob(n, encoding):
         """ Converts native string to bytes
@@ -41,7 +44,12 @@ else:  # pragma: nocover
     chr = chr
     ord = ord
     b = lambda s: s
-    n = lambda s: s
+
+    def n(s):
+        if isinstance(s, unicode):
+            return s.encode('latin1')
+        else:
+            return s
 
 
 # Hash functions
