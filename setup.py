@@ -40,7 +40,7 @@ setup(
     keywords = [
         'security'
     ],
-    packages = ['wheezy', 'wheezy.security'],
+    packages = ['wheezy', 'wheezy.security', 'wheezy.security.crypto'],
     package_dir = {'': 'src'},
     namespace_packages=['wheezy'],
 
