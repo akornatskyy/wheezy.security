@@ -58,7 +58,7 @@ class Ticket:
         >>> t = Ticket()
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
-        >>> n(text)
+        >>> text
         'hello'
         >>> assert time_left >= 0
 
@@ -67,7 +67,7 @@ class Ticket:
         >>> t = Ticket(cypher=None)
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
-        >>> n(text)
+        >>> text
         'hello'
         >>> assert time_left >= 0
     """
@@ -106,7 +106,9 @@ class Ticket:
         if cypher:
             cypher = cypher()
             value = encrypt(cypher, pad(value, self.block_size))
-        return b64encode(self.sign(value) + value, BASE64_ALTCHARS)
+        return bton(
+                b64encode(self.sign(value) + value, BASE64_ALTCHARS),
+                'latin1')
 
     def decode(self, value, encoding='utf-8'):
         """ Decode ``value`` according to ticket policy.
@@ -121,19 +123,19 @@ class Ticket:
 
             >>> value = 'cf-0eDoyN6VwP-IyZap4zTBjsHqqaZua4MkG'
             >>> value += 'AA11HGdoZWxsbxBSjyg='
-            >>> t.decode(b(value))
+            >>> t.decode(value)
             (None, None)
 
             Expired
 
             >>> value = '1ZRcHGsYENF~lzezpMKFFF9~QBCQkqPlIMoG'
             >>> value += 'AA11HGdoZWxsbxBSjyg='
-            >>> t.decode(b(value))
+            >>> t.decode(value)
             (None, None)
         """
         if len(value) < 56:
             return (None, None)
-        value = b64decode(value, BASE64_ALTCHARS)
+        value = b64decode(ntob(value, 'latin1'), BASE64_ALTCHARS)
         signature = value[:self.digest_size]
         value = value[self.digest_size:]
         if signature != self.sign(value):
@@ -146,7 +148,7 @@ class Ticket:
         time_left = unpack('<i', expires)[0] - self.timestamp()
         if time_left < 0:
             return (None, None)
-        return (value.decode(encoding), time_left)
+        return (bton(value, encoding), time_left)
 
     def timestamp(self):
         return int(time()) - EPOCH
