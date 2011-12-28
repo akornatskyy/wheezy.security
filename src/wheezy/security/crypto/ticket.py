@@ -15,16 +15,16 @@ from wheezy.security.crypto import config
 from wheezy.security.crypto.comp import aes128
 from wheezy.security.crypto.comp import b
 from wheezy.security.crypto.comp import block_size
-from wheezy.security.crypto.comp import bton
+from wheezy.security.crypto.comp import btos
 from wheezy.security.crypto.comp import decrypt
 from wheezy.security.crypto.comp import digest_size
 from wheezy.security.crypto.comp import encrypt
-from wheezy.security.crypto.comp import ntob
 from wheezy.security.crypto.comp import sha1
 from wheezy.security.crypto.padding import pad
 from wheezy.security.crypto.padding import unpad
 
 BASE64_ALTCHARS = b('-~')
+EMPTY = b('')
 EPOCH = 1317212745
 
 
@@ -58,7 +58,7 @@ class Ticket:
         >>> t = Ticket()
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
-        >>> text
+        >>> n(text)
         'hello'
         >>> assert time_left >= 0
 
@@ -67,7 +67,7 @@ class Ticket:
         >>> t = Ticket(cypher=None)
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
-        >>> text
+        >>> n(text)
         'hello'
         >>> assert time_left >= 0
     """
@@ -92,10 +92,10 @@ class Ticket:
     def encode(self, value, encoding='utf-8'):
         """ Encode ``value`` accoring to ticket policy.
         """
-        value = value.encode(encoding)
+        value = b(value, encoding)
         expires = pack('<i', self.timestamp() + self.max_age)
         noise = urandom(12)
-        value = b('').join((
+        value = EMPTY.join((
             noise[:4],
             expires,
             noise[4:8],
@@ -106,8 +106,7 @@ class Ticket:
         if cypher:
             cypher = cypher()
             value = encrypt(cypher, pad(value, self.block_size))
-        return bton(
-                b64encode(self.sign(value) + value, BASE64_ALTCHARS),
+        return btos(b64encode(self.sign(value) + value, BASE64_ALTCHARS),
                 'latin1')
 
     def decode(self, value, encoding='utf-8'):
@@ -135,7 +134,7 @@ class Ticket:
         """
         if len(value) < 56:
             return (None, None)
-        value = b64decode(ntob(value, 'latin1'), BASE64_ALTCHARS)
+        value = b64decode(b(value), BASE64_ALTCHARS)
         signature = value[:self.digest_size]
         value = value[self.digest_size:]
         if signature != self.sign(value):
@@ -148,7 +147,7 @@ class Ticket:
         time_left = unpack('<i', expires)[0] - self.timestamp()
         if time_left < 0:
             return (None, None)
-        return (bton(value, encoding), time_left)
+        return (btos(value, encoding), time_left)
 
     def timestamp(self):
         return int(time()) - EPOCH

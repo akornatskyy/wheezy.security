@@ -8,48 +8,38 @@ import sys
 PY3 = sys.version_info[0] >= 3
 
 if PY3:  # pragma: nocover
+    bytes_type = bytes
+    str_type = str
+    chr = lambda i: bytes((i,))
+    ord = lambda b: b
 
-    def ntob(n, encoding):
-        """ Converts native string to bytes
-        """
-        return n.encode(encoding)
+    def n(s, encoding='latin1'):
+        if isinstance(s, str_type):
+            return s
+        return s.decode(encoding)
 
-    def bton(b, encoding):
-        """ Converts bytes to native string
-        """
+    def btos(b, encoding):
         return b.decode(encoding)
 
-    chr = lambda i: bytes([i])
-    ord = lambda b: b
-    b = lambda s: s.encode('latin1')
-
-    def n(s):
-        if isinstance(s, bytes):
-            return s.decode('latin1')
-        else:
-            return s
-
 else:  # pragma: nocover
-
-    def ntob(n, encoding):
-        """ Converts native string to bytes
-        """
-        return n
-
-    def bton(b, encoding):
-        """ Converts bytes to native string
-        """
-        return b
-
+    bytes_type = str
+    str_type = unicode
     chr = chr
     ord = ord
-    b = lambda s: s
 
-    def n(s):
-        if isinstance(s, unicode):
-            return s.encode('latin1')
-        else:
+    def n(s, encoding='latin1'):
+        if isinstance(s, bytes_type):
             return s
+        return s.encode(encoding)
+
+    def btos(b, encoding):
+        return b.decode(encoding)
+
+
+def b(s, encoding='latin1'):  # pragma: nocover
+    if isinstance(s, bytes_type):
+        return s
+    return s.encode(encoding)
 
 
 # Hash functions
