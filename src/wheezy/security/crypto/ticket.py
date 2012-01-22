@@ -9,9 +9,8 @@ from os import urandom
 from struct import pack
 from struct import unpack
 from time import time
+from warnings import warn
 
-from wheezy.core.config import Config
-from wheezy.security.crypto import config
 from wheezy.security.crypto.comp import aes128
 from wheezy.security.crypto.comp import b
 from wheezy.security.crypto.comp import block_size
@@ -64,7 +63,10 @@ class Ticket:
 
         If cypher is not available verification is still applied.
 
+        >>> import warnings
+        >>> warnings.simplefilter('ignore')
         >>> t = Ticket(cypher=None)
+        >>> warnings.simplefilter('default')
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
         >>> n(text)
@@ -78,16 +80,18 @@ class Ticket:
             cypher=aes128, options=None):
         self.max_age = max_age
         digestmod = digestmod or sha1
-        c = Config(options, master=config)
-        key = b(salt + c.CRYPTO_VALIDATION_KEY)
+        options = options or {}
+        key = b(salt + options.get('CRYPTO_VALIDATION_KEY', ''))
         key = ensure_strong_key(key)
         self.hmac = hmac_new(key, digestmod=digestmod)
         self.digest_size = digest_size(digestmod)
         if cypher:
-            key = b(salt + c.CRYPTO_ENCRYPTION_KEY)
+            key = b(salt + options.get('CRYPTO_ENCRYPTION_KEY', ''))
             key = ensure_strong_key(key)
             self.cypher = cypher(key)
             self.block_size = block_size(self.cypher())
+        else:
+            warn('Ticket: cypher not available', stacklevel=2)
 
     def encode(self, value, encoding='utf-8'):
         """ Encode ``value`` accoring to ticket policy.
@@ -114,7 +118,10 @@ class Ticket:
 
             The ``value`` length is at least 56.
 
+            >>> import warnings
+            >>> warnings.simplefilter('ignore')
             >>> t = Ticket(cypher=None)
+            >>> warnings.simplefilter('default')
             >>> t.decode('abc')
             (None, None)
 

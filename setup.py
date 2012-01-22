@@ -38,7 +38,7 @@ setup(
         'Topic :: Utilities'
     ],
     keywords = [
-        'security'
+        'security ticket encryption pycrypto'
     ],
     packages = ['wheezy', 'wheezy.security', 'wheezy.security.crypto'],
     package_dir = {'': 'src'},
@@ -46,11 +46,10 @@ setup(
 
     zip_safe = True,
     install_requires = [
-        'wheezy.core'
     ],
     extras_require = {
+        'crypto': ['pycrypto'],
         'dev': [
-            'wsgiref',
             'coverage',
             'nose',
             'pytest',
