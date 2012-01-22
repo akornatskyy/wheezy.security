@@ -10,17 +10,17 @@ except:
 README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 
 setup(
-    name = 'wheezy.security',
-    version = '0.1',
-    description = 'A lightweight security/cryptography library',
-    long_description = README,
-    url = 'https://bitbucket.org/akorn/wheezy.security',
+    name='wheezy.security',
+    version='0.1',
+    description='A lightweight security/cryptography library',
+    long_description=README,
+    url='https://bitbucket.org/akorn/wheezy.security',
 
-    author = 'Andriy Kornatskyy',
-    author_email = 'andriy.kornatskyy at live.com',
+    author='Andriy Kornatskyy',
+    author_email='andriy.kornatskyy at live.com',
 
-    license = 'MIT',
-    classifiers = [
+    license='MIT',
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
@@ -37,17 +37,15 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities'
     ],
-    keywords = [
-        'security ticket encryption pycrypto'
-    ],
-    packages = ['wheezy', 'wheezy.security', 'wheezy.security.crypto'],
-    package_dir = {'': 'src'},
+    keywords='security ticket encryption pycrypto',
+    packages=['wheezy', 'wheezy.security', 'wheezy.security.crypto'],
+    package_dir={'': 'src'},
     namespace_packages=['wheezy'],
 
-    zip_safe = True,
-    install_requires = [
+    zip_safe=True,
+    install_requires=[
     ],
-    extras_require = {
+    extras_require={
         'crypto': ['pycrypto'],
         'dev': [
             'coverage',
@@ -58,5 +56,5 @@ setup(
         ]
     },
 
-    platforms = 'any'
+    platforms='any'
 )
