@@ -1,7 +1,7 @@
 .SILENT: clean env doctest-cover test doc release
 .PHONY: clean env doctest-cover test doc release
 
-VERSION=2.6
+VERSION=2.7
 PYPI=http://pypi.python.org/simple
 
 PYTHON=env/bin/python$(VERSION)
@@ -37,15 +37,15 @@ env:
 		echo 'done.'; \
 	fi
 	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
-		pytest-pep8 pytest-cov wsgiref
-	if [ "$$(ls $(PYPI)/pycrypto*.egg)" ]; then \
+		pytest-pep8 pytest-cov
+	if [ "$$(ls $(PYPI)/pycrypto-*.egg)" ]; then \
 		$(EASY_INSTALL) -i $(PYPI) -O2 pycrypto; \
 	else \
 		if [ ! -e env/pycrypto.tgz ]; then \
-			if [ -e $(PYPI)/pycrypto.tgz ]; then \
+			if [ -e $(PYPI)/pcrypto.tgz ]; then \
 				cp $(PYPI)/pycrypto.tgz env/ ;\
 			else \
-				wget https://github.com/dlitz/pycrypto/tarball/py3k \
+				wget https://github.com/dlitz/pycrypto/tarball/master \
 					-O env/pycrypto.tgz; \
 			fi; \
 		fi; \
