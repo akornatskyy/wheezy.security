@@ -6,6 +6,8 @@ EMPTY_TUPLE = tuple([])
 
 
 class Principal(object):
+    """ Container of user specific security information
+    """
 
     def __init__(self, id='', roles=None, alias='', extra=''):
         self.id = id
