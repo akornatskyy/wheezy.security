@@ -17,7 +17,7 @@ Resources:
 
 * `source code`_, `examples`_ and `issues`_ tracker are available
   on `bitbucket`_
-* `documentation`_
+* `documentation`_, `readthedocs`_
 * `eggs`_ on `pypi`_
 
 Contents
@@ -31,12 +31,13 @@ Contents
    userguide
    modules
 
-.. _`python`: http://www.python.org
-.. _`source code`: http://bitbucket.org/akorn/wheezy.security/src
 .. _`bitbucket`: http://bitbucket.org/akorn/wheezy.security
-.. _`issues`: http://bitbucket.org/akorn/wheezy.security/issues
 .. _`documentation`: http://packages.python.org/wheezy.security
-.. _`examples`: http://bitbucket.org/akorn/wheezy.security/src/tip/demos
-.. _`pypi`: http://pypi.python.org
 .. _`eggs`: http://pypi.python.org/pypi/wheezy.security
+.. _`examples`: http://bitbucket.org/akorn/wheezy.security/src/tip/demos
+.. _`issues`: http://bitbucket.org/akorn/wheezy.security/issues
 .. _`pycrypto`: https://www.dlitz.net/software/pycrypto/
+.. _`pypi`: http://pypi.python.org
+.. _`python`: http://www.python.org
+.. _`readthedocs`: http://readthedocs.org/builds/wheezysecurity/
+.. _`source code`: http://bitbucket.org/akorn/wheezy.security/src
