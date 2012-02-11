@@ -7,6 +7,18 @@ wheezy.security
 .. automodule:: wheezy.security
    :members:
 
+wheezy.security.authorization
+-----------------------------
+
+.. automodule:: wheezy.security.authorization
+   :members:
+   
+wheezy.security.errors
+----------------------
+
+.. automodule:: wheezy.security.errors
+   :members:
+   
 wheezy.security.principal
 -------------------------
 

@@ -127,4 +127,34 @@ You can use ``Ticket`` to secure ``Principal`` pass across network boundary.
 Combining them both you can introduce authentication/authorization cookie
 to your application.
 
+Authorization
+-------------
 
+Authorization specify access rights to resources and provide access control 
+in particular to your application.
+
+You are able to request authorization by decorating your method with 
+:py:meth:`~wheezy.security.authorization.authorized`. Here is typical use
+case::
+
+    from wheezy.security import authorized
+    
+    class MyBusinessLogic(object):
+    
+         principal = None
+         
+         @authorized
+         def cancel_transfer(self, id):
+             return True
+
+         @authorized(roles=('operator',))
+         def approve_transfer(self):
+             return True
+             
+Note that :py:meth:`~wheezy.security.authorization.authorized` decorator
+requires the object to supply ``principal`` attribute of type 
+:py:class:`~wheezy.security.principal.Principal`.
+
+If caller is not authorized to perform requested operation
+:py:class:`~wheezy.security.errors.SecurityError` exception is raised.
+See :py:meth:`~wheezy.security.authorization.authorized` for more details.

@@ -52,6 +52,3 @@ class Principal(object):
         """
         id, roles, alias, extra = s.split('\x1f', 3)
         return cls(id, tuple(roles.split(';')), alias, extra)
-
-
-ANONYMOUS = Principal()
