@@ -34,15 +34,18 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Utilities'
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'Topic :: Security',
+        'Topic :: Security :: Cryptography',
+        'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     keywords='security ticket encryption pycrypto',
     packages=['wheezy', 'wheezy.security', 'wheezy.security.crypto'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],
 
-    zip_safe=True,
+    zip_safe=False,
     install_requires=[
     ],
     extras_require={
