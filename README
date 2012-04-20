@@ -31,52 +31,20 @@ built-in support specify extra requirements::
 
     $ easy_install wheezy.security[pycrypto]
 
-Develop
--------
-
-You can get the `source code`_ using `mercurial`_::
-
-    $ hg clone http://bitbucket.org/akorn/wheezy.security
-    $ cd wheezy.security
-
-Prepare `virtualenv`_ environment in *env* directory ::
-
-    $ make env
-
-... and run all tests::
-
-    $ make test
-
-You can read how to compile from source code different versions of
-`python`_ in the `article`_ published on `mind reference`_ blog.
-
-You can run certain make targets with specific python version. Here
-we are going to run `doctest`_ with python3.2::
-
-    $ make env doctest-cover VERSION=3.2
-
-Generate documentation with `sphinx`_::
-
-	$ make doc
-
 If you run into any issue or have comments, go ahead and add on
 `bitbucket`_.
 
-.. _`article`: http://mindref.blogspot.com/2011/09/compile-python-from-source.html
 .. _`bitbucket`: http://bitbucket.org/akorn/wheezy.security/issues
 .. _`doctest`: http://docs.python.org/library/doctest.html
 .. _`documentation`: http://packages.python.org/wheezy.security
 .. _`eggs`: http://pypi.python.org/pypi/wheezy.security
 .. _`examples`: http://bitbucket.org/akorn/wheezy.security/src/tip/demos
 .. _`issues`: http://bitbucket.org/akorn/wheezy.security/issues
-.. _`mercurial`: http://mercurial.selenic.com
-.. _`mind reference`: http://mindref.blogspot.com
 .. _`pycrypto`: https://www.dlitz.net/software/pycrypto
 .. _`pypi`: http://pypi.python.org
 .. _`python`: http://www.python.org
 .. _`readthedocs`: http://readthedocs.org/builds/wheezysecurity
 .. _`setuptools`: http://pypi.python.org/pypi/setuptools
 .. _`source code`: http://bitbucket.org/akorn/wheezy.security/src
-.. _`sphinx`: http://sphinx.pocoo.org
 .. _`virtualenv`: http://pypi.python.org/pypi/virtualenv
 .. _`wheezy.security`: http://pypi.python.org/pypi/wheezy.security
