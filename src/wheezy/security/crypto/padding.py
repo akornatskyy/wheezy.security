@@ -4,7 +4,6 @@
     see http://www.di-mgt.com.au/cryptopad.html
 """
 
-from wheezy.security.crypto.comp import b
 from wheezy.security.crypto.comp import chr
 from wheezy.security.crypto.comp import ord
 
@@ -20,6 +19,7 @@ def pad(s, block_size):
         ``s`` - byte string.
 
         >>> from binascii import hexlify
+        >>> from wheezy.security.crypto.comp import b
         >>> from wheezy.security.crypto.comp import n
         >>> n(hexlify(pad(b('workbook'), 8)))
         '776f726b626f6f6b0000000000000008'
@@ -42,6 +42,7 @@ def unpad(s, block_size):
         ``s`` - byte string.
 
         >>> from binascii import unhexlify
+        >>> from wheezy.security.crypto.comp import b
         >>> from wheezy.security.crypto.comp import n
         >>> s = unhexlify(b('666f720000000005'))
         >>> n(unpad(s, 8))
