@@ -2,8 +2,6 @@
 """ ``principal`` module.
 """
 
-EMPTY_TUPLE = tuple([])
-
 
 class Principal(object):
     """ Container of user specific security information
@@ -11,7 +9,7 @@ class Principal(object):
 
     def __init__(self, id='', roles=None, alias='', extra=''):
         self.id = id
-        self.roles = roles or EMPTY_TUPLE
+        self.roles = roles or ()
         self.alias = alias
         self.extra = extra
 
