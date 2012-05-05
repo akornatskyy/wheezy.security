@@ -46,7 +46,11 @@ def ensure_strong_key(key):
     return key + hmac.digest()
 
 
-class Ticket:
+def timestamp():
+    return int(time()) - EPOCH
+
+
+class Ticket(object):
     """ Protects sensitive information (e.g. user id). Default policy
         applies verification and encryption. Verification is provided
         by ``hmac`` initialized with ``sha1`` digestmod. Encryption
@@ -73,8 +77,7 @@ class Ticket:
         'hello'
         >>> assert time_left >= 0
     """
-
-    cypher = None
+    __slots__ = ('cypher', 'max_age', 'hmac', 'digest_size', 'block_size')
 
     def __init__(self, max_age=900, salt='', digestmod=None,
             cypher=aes128, options=None):
@@ -91,13 +94,14 @@ class Ticket:
             self.cypher = cypher(key)
             self.block_size = block_size(self.cypher())
         else:
+            self.cypher = None
             warn('Ticket: cypher not available', stacklevel=2)
 
     def encode(self, value, encoding='utf-8'):
         """ Encode ``value`` accoring to ticket policy.
         """
         value = b(value, encoding)
-        expires = pack('<i', self.timestamp() + self.max_age)
+        expires = pack('<i', timestamp() + self.max_age)
         noise = urandom(12)
         value = EMPTY.join((
             noise[:4],
@@ -151,13 +155,10 @@ class Ticket:
             cypher = cypher()
             value = unpad(decrypt(cypher, value), self.block_size)
         expires, value = value[4:8], value[12:-4]
-        time_left = unpack('<i', expires)[0] - self.timestamp()
+        time_left = unpack('<i', expires)[0] - timestamp()
         if time_left < 0:
             return (None, None)
         return (btos(value, encoding), time_left)
-
-    def timestamp(self):
-        return int(time()) - EPOCH
 
     def sign(self, value):
         h = self.hmac.copy()
