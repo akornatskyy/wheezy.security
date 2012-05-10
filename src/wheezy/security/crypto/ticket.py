@@ -4,6 +4,7 @@
 
 from base64 import b64decode
 from base64 import b64encode
+from binascii import Error as BinError
 from hmac import new as hmac_new
 from os import urandom
 from struct import pack
@@ -59,6 +60,8 @@ class Ticket(object):
 
         >>> from wheezy.security.crypto.comp import n
         >>> t = Ticket()
+        >>> len(t.encode(''))
+        72
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
         >>> n(text)
@@ -71,6 +74,8 @@ class Ticket(object):
         >>> warnings.simplefilter('ignore')
         >>> t = Ticket(cypher=None)
         >>> warnings.simplefilter('default')
+        >>> len(t.encode(''))
+        48
         >>> x = t.encode('hello')
         >>> text, time_left = t.decode(x)
         >>> n(text)
@@ -97,7 +102,7 @@ class Ticket(object):
             self.cypher = None
             warn('Ticket: cypher not available', stacklevel=2)
 
-    def encode(self, value, encoding='utf-8'):
+    def encode(self, value, encoding='UTF-8'):
         """ Encode ``value`` accoring to ticket policy.
         """
         value = b(value, encoding)
@@ -117,20 +122,42 @@ class Ticket(object):
         return btos(b64encode(self.sign(value) + value, BASE64_ALTCHARS),
                 'latin1')
 
-    def decode(self, value, encoding='utf-8'):
+    def decode(self, value, encoding='UTF-8'):
         """ Decode ``value`` according to ticket policy.
 
-            The ``value`` length is at least 56.
+            The ``value`` length is at least 48.
 
             >>> import warnings
             >>> warnings.simplefilter('ignore')
             >>> t = Ticket(cypher=None)
             >>> warnings.simplefilter('default')
-            >>> t.decode('abc')
+            >>> t.decode('a' * 47)
+            (None, None)
+
+            Invalid base64 string
+
+            >>> value = 'D' * 57
+            >>> t.decode(value)
+            (None, None)
+
+            UnicodeDecodeError
+
+            >>> from wheezy.security.crypto.comp import u
+            >>> value = t.encode(u('\\u0430'))
+            >>> t.decode(value, 'ascii')
+            (None, None)
+
+            Invalid string padding
+
+            >>> t = Ticket(cypher=None)
+            >>> value = t.encode('a'*31)
+            >>> t = Ticket()
+            >>> t.decode(value)
             (None, None)
 
             Signature is not valid
 
+            >>> t = Ticket(cypher=None)
             >>> value = 'cf-0eDoyN6VwP-IyZap4zTBjsHqqaZua4MkG'
             >>> value += 'AA11HGdoZWxsbxBSjyg='
             >>> t.decode(value)
@@ -142,10 +169,29 @@ class Ticket(object):
             >>> value += 'AA11HGdoZWxsbxBSjyg='
             >>> t.decode(value)
             (None, None)
+
+            Invalid verification key
+
+            >>> t = Ticket()
+            >>> value = t.encode('test')
+            >>> t = Ticket(options={'CRYPTO_VALIDATION_KEY': 'x'})
+            >>> t.decode(value)
+            (None, None)
+
+            Invalid encryption key
+
+            >>> t = Ticket()
+            >>> value = t.encode('test')
+            >>> t = Ticket(options={'CRYPTO_ENCRYPTION_KEY': 'x'})
+            >>> t.decode(value)
+            (None, None)
         """
-        if len(value) < 56:
+        if len(value) < 48:
             return (None, None)
-        value = b64decode(b(value), BASE64_ALTCHARS)
+        try:
+            value = b64decode(b(value), BASE64_ALTCHARS)
+        except (TypeError, BinError):
+            return (None, None)
         signature = value[:self.digest_size]
         value = value[self.digest_size:]
         if signature != self.sign(value):
@@ -153,12 +199,19 @@ class Ticket(object):
         cypher = self.cypher
         if cypher:
             cypher = cypher()
+            if len(value) % self.block_size != 0:
+                return (None, None)
             value = unpad(decrypt(cypher, value), self.block_size)
+        if len(value) < 16:  # pragma: nocover
+            return (None, None)
         expires, value = value[4:8], value[12:-4]
         time_left = unpack('<i', expires)[0] - timestamp()
-        if time_left < 0:
+        if time_left < 0 or time_left > self.max_age:
             return (None, None)
-        return (btos(value, encoding), time_left)
+        try:
+            return (btos(value, encoding), time_left)
+        except UnicodeDecodeError:
+            return (None, None)
 
     def sign(self, value):
         h = self.hmac.copy()
