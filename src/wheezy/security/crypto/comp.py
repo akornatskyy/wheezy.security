@@ -21,6 +21,8 @@ if PY3:  # pragma: nocover
     def btos(b, encoding):
         return b.decode(encoding)
 
+    u = lambda s: s
+
 else:  # pragma: nocover
     bytes_type = str
     str_type = unicode
@@ -34,6 +36,8 @@ else:  # pragma: nocover
 
     def btos(b, encoding):
         return b.decode(encoding)
+
+    u = lambda s: unicode(s, 'unicode_escape')
 
 
 def b(s, encoding='latin1'):  # pragma: nocover
