@@ -49,14 +49,21 @@ def b(s, encoding='latin1'):  # pragma: nocover
 # Hash functions
 try:  # pragma: nocover
     # Python 2.5+
-    from hashlib import md5
-    from hashlib import sha1
+    from hashlib import md5, sha1, sha224, sha256, sha384, sha512
     digest_size = lambda d: d().digest_size
+
+    try:
+        from hashlib import new as openssl_hash
+        ripemd160 = lambda: openssl_hash('ripemd160')
+        whirlpool = lambda: openssl_hash('whirlpool')
+    except ValueError:
+        ripemd160 = None
+        whirlpool = None
 except ImportError:  # pragma: nocover
     import md5
     import sha as sha1
+    sha224 = ssa256 = ssh384 = ssh512 = ripemd160 = whirlpool = None
     digest_size = lambda d: d.digest_size
-
 
 # Encryption interface
 block_size = None

@@ -59,7 +59,7 @@ class Ticket(object):
         cypher.
 
         >>> from wheezy.security.crypto.comp import n
-        >>> t = Ticket()
+        >>> t = Ticket(digestmod=sha1)
         >>> len(t.encode(''))
         72
         >>> x = t.encode('hello')
@@ -87,7 +87,10 @@ class Ticket(object):
     def __init__(self, max_age=900, salt='', digestmod=None,
             cypher=aes128, options=None):
         self.max_age = max_age
-        digestmod = digestmod or sha1
+        if not digestmod:
+            warn('Ticket: digestmod is not specified, fallback to sha1',
+                    stacklevel=2)
+            digestmod = sha1
         options = options or {}
         key = b(salt + options.get('CRYPTO_VALIDATION_KEY', ''))
         key = ensure_strong_key(key)
