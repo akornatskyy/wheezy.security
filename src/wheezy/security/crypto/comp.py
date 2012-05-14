@@ -62,7 +62,7 @@ try:  # pragma: nocover
 except ImportError:  # pragma: nocover
     import md5
     import sha as sha1
-    sha224 = ssa256 = ssh384 = ssh512 = ripemd160 = whirlpool = None
+    sha224 = sha256 = sha384 = sha512 = ripemd160 = whirlpool = None
     digest_size = lambda d: d.digest_size
 
 # Encryption interface
