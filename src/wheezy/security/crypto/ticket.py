@@ -85,11 +85,11 @@ class Ticket(object):
     __slots__ = ('cypher', 'max_age', 'hmac', 'digest_size', 'block_size')
 
     def __init__(self, max_age=900, salt='', digestmod=None,
-            cypher=aes128, options=None):
+                 cypher=aes128, options=None):
         self.max_age = max_age
         if not digestmod:
             warn('Ticket: digestmod is not specified, fallback to sha1',
-                    stacklevel=2)
+                 stacklevel=2)
             digestmod = sha1
         options = options or {}
         key = b(salt + options.get('CRYPTO_VALIDATION_KEY', ''))
@@ -123,7 +123,7 @@ class Ticket(object):
             cypher = cypher()
             value = encrypt(cypher, pad(value, self.block_size))
         return btos(b64encode(self.sign(value) + value, BASE64_ALTCHARS),
-                'latin1')
+                    'latin1')
 
     def decode(self, value, encoding='UTF-8'):
         """ Decode ``value`` according to ticket policy.
