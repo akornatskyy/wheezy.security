@@ -7,9 +7,9 @@ class Principal(object):
     """ Container of user specific security information
     """
 
-    def __init__(self, id='', roles=None, alias='', extra=''):
+    def __init__(self, id='', roles=(), alias='', extra=''):
         self.id = id
-        self.roles = roles or ()
+        self.roles = roles
         self.alias = alias
         self.extra = extra
 
