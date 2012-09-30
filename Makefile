@@ -38,23 +38,7 @@ env:
 		echo 'done.'; \
 	fi
 	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
-		pytest-pep8 pytest-cov
-	if [ "$$(ls $(PYPI)/pycrypto-*.egg)" ]; then \
-		$(EASY_INSTALL) -i $(PYPI) -O2 pycrypto; \
-	else \
-		if [ ! -e env/pycrypto.tgz ]; then \
-			if [ -e $(PYPI)/pcrypto.tgz ]; then \
-				cp $(PYPI)/pycrypto.tgz env/ ;\
-			else \
-				wget https://github.com/dlitz/pycrypto/tarball/master \
-					-O env/pycrypto.tgz; \
-			fi; \
-		fi; \
-		if [ -z `find env/lib/python$(VERSION) -name '*.py' | \
-			xargs grep pycrypto` ]; then \
-			$(EASY_INSTALL) -O2 env/pycrypto.tgz; \
-		fi; \
-	fi
+		pytest-pep8 pytest-cov pycrypto
 	# The following packages available for python < 3.0
 	#if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \
 	#	$(EASY_INSTALL) sphinx; \
