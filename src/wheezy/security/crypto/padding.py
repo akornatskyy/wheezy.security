@@ -9,12 +9,12 @@ from wheezy.security.crypto.comp import ord
 
 
 def pad(s, block_size):
-    """ Pad with zeroes except make the last byte equal to the
+    """ Pad with zeros except make the last byte equal to the
         number of padding bytes.
 
         The convention with this method is usually always to
         add a padding string, even if the original plaintext was
-        already an exact multiple of 8 bytes.
+        already an exact multiple of `block_size` bytes.
 
         ``s`` - byte string.
 
@@ -47,7 +47,7 @@ def unpad(s, block_size):
         >>> s = unhexlify(b('666f720000000005'))
         >>> n(unpad(s, 8))
         'for'
-        >>> s = unhexlify(b('776f726b626f6f6b'))
+        >>> s = unhexlify(b('776f726b626f6f6b0000000000000008'))
         >>> n(unpad(s, 8))
         'workbook'
         >>> unpad('', 8)
@@ -60,6 +60,6 @@ def unpad(s, block_size):
     if n > 0:
         return None
     n = ord(s[-1])
-    if n >= block_size:
-        return s
+    if n > block_size:
+        return None
     return s[:-n]
