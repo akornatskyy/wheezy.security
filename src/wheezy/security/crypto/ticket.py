@@ -118,10 +118,8 @@ class Ticket(object):
             value,
             noise[8:]
         ))
-        cypher = self.cypher
-        if cypher:
-            cypher = cypher()
-            value = encrypt(cypher, pad(value, self.block_size))
+        if self.cypher:
+            value = encrypt(self.cypher(), pad(value, self.block_size))
         return btos(b64encode(self.sign(value) + value, BASE64_ALTCHARS),
                     'latin1')
 
@@ -199,12 +197,12 @@ class Ticket(object):
         value = value[self.digest_size:]
         if signature != self.sign(value):
             return (None, None)
-        cypher = self.cypher
-        if cypher:
-            cypher = cypher()
+        if self.cypher:
             if len(value) % self.block_size != 0:
                 return (None, None)
-            value = unpad(decrypt(cypher, value), self.block_size)
+            value = unpad(decrypt(self.cypher(), value), self.block_size)
+            if value is None:
+                return (None, None)
         if len(value) < 16:  # pragma: nocover
             return (None, None)
         expires, value = value[4:8], value[12:-4]
