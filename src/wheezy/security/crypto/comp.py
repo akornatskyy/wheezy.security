@@ -29,12 +29,12 @@ else:  # pragma: nocover
     chr = chr
     ord = ord
 
-    def n(s, encoding='latin1'):
+    def n(s, encoding='latin1'):  # noqa
         if isinstance(s, bytes_type):
             return s
         return s.encode(encoding)
 
-    def btos(b, encoding):
+    def btos(b, encoding):  # noqa
         return b.decode(encoding)
 
     u = lambda s: unicode(s, 'unicode_escape')
@@ -60,9 +60,9 @@ try:  # pragma: nocover
         ripemd160 = None
         whirlpool = None
 except ImportError:  # pragma: nocover
-    import md5
-    import sha as sha1
-    sha224 = sha256 = sha384 = sha512 = ripemd160 = whirlpool = None
+    import md5  # noqa
+    import sha as sha1  # noqa
+    sha224 = sha256 = sha384 = sha512 = ripemd160 = whirlpool = None  # noqa
     digest_size = lambda d: d.digest_size
 
 # Encryption interface
