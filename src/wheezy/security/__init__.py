@@ -2,6 +2,8 @@
 """ ``security`` package.
 """
 
+__version__ = '0.1'
+
 # flake8: noqa
 
 from wheezy.security.authorization import authorized
