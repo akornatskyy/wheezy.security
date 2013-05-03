@@ -14,18 +14,7 @@ class Principal(object):
         self.extra = extra
 
     def dump(self):
-        """
-            >>> p = Principal()
-            >>> s = p.dump()
-            >>> assert 3 == len(s)
-            >>> s
-            '\\x1f\\x1f\\x1f'
-            >>> p = Principal(id='79053',
-            ...         roles=('a', 'b'),
-            ...         alias='John',
-            ...         extra='anything')
-            >>> p.dump()
-            '79053\\x1fa;b\\x1fJohn\\x1fanything'
+        """ Dump principal object.
         """
         return '\x1f'.join([
             self.id,
@@ -35,18 +24,7 @@ class Principal(object):
 
     @classmethod
     def load(cls, s):
-        """
-            >>> p = Principal.load('\x1f\x1f\x1f')
-            >>> assert p
-            >>> p = Principal.load('79053\\x1fa;b\x1fJohn\\x1fanything')
-            >>> p.id
-            '79053'
-            >>> p.roles
-            ('a', 'b')
-            >>> p.alias
-            'John'
-            >>> p.extra
-            'anything'
+        """ Load principal object from string.
         """
         id, roles, alias, extra = s.split('\x1f', 3)
         return cls(id, tuple(roles.split(';')), alias, extra)
