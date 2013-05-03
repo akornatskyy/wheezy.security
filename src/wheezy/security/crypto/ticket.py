@@ -31,15 +31,6 @@ EPOCH = 1317212745
 def ensure_strong_key(key):
     """ Translates a given key to a computed strong key of length
         320 bit suitable for encryption.
-
-        >>> from wheezy.security.crypto.comp import n
-        >>> k = ensure_strong_key(b(''))
-        >>> len(k)
-        40
-        >>> n(b64encode(k))
-        '+9sdGxiqbAgyS31ktx+3Y3BpDh1fA7dyIanFu+fzE/Lc5EaX+NQGsA=='
-        >>> n(b64encode(ensure_strong_key(b('abc'))))
-        'zEfjwKoMKYRFRHbQYRCMCxEBd66sLMHe/H6umZFFQMixhLcp8jfwGQ=='
     """
     hmac = hmac_new(key, digestmod=sha1)
     key = hmac.digest()
@@ -52,35 +43,12 @@ def timestamp():
 
 
 class Ticket(object):
-    """ Protects sensitive information (e.g. user id). Default policy
-        applies verification and encryption. Verification is provided
-        by ``hmac`` initialized with ``sha1`` digestmod. Encryption
-        is provided if available, by default it attempts to use AES
-        cypher.
+    """ Protects sensitive information (e.g. user id).
 
-        >>> from wheezy.security.crypto.comp import n
-        >>> t = Ticket(digestmod=sha1)
-        >>> len(t.encode(''))
-        72
-        >>> x = t.encode('hello')
-        >>> text, time_left = t.decode(x)
-        >>> n(text)
-        'hello'
-        >>> assert time_left >= 0
-
-        If cypher is not available verification is still applied.
-
-        >>> import warnings
-        >>> warnings.simplefilter('ignore')
-        >>> t = Ticket(cypher=None)
-        >>> warnings.simplefilter('default')
-        >>> len(t.encode(''))
-        48
-        >>> x = t.encode('hello')
-        >>> text, time_left = t.decode(x)
-        >>> n(text)
-        'hello'
-        >>> assert time_left >= 0
+        Default policy applies verification and encryption.
+        Verification is provided by ``hmac`` initialized with ``sha1``
+        digestmod. Encryption is provided if available, by default
+        it attempts to use AES cypher.
     """
     __slots__ = ('cypher', 'max_age', 'hmac', 'digest_size', 'block_size')
 
@@ -106,7 +74,7 @@ class Ticket(object):
             warn('Ticket: cypher not available', stacklevel=2)
 
     def encode(self, value, encoding='UTF-8'):
-        """ Encode ``value`` accoring to ticket policy.
+        """ Encode ``value`` according to ticket policy.
         """
         value = b(value, encoding)
         expires = pack('<i', timestamp() + self.max_age)
@@ -125,67 +93,6 @@ class Ticket(object):
 
     def decode(self, value, encoding='UTF-8'):
         """ Decode ``value`` according to ticket policy.
-
-            The ``value`` length is at least 48.
-
-            >>> import warnings
-            >>> warnings.simplefilter('ignore')
-            >>> t = Ticket(cypher=None)
-            >>> warnings.simplefilter('default')
-            >>> t.decode('a' * 47)
-            (None, None)
-
-            Invalid base64 string
-
-            >>> value = 'D' * 57
-            >>> t.decode(value)
-            (None, None)
-
-            UnicodeDecodeError
-
-            >>> from wheezy.security.crypto.comp import u
-            >>> value = t.encode(u('\\u0430'))
-            >>> t.decode(value, 'ascii')
-            (None, None)
-
-            Invalid string padding
-
-            >>> t = Ticket(cypher=None)
-            >>> value = t.encode('a'*31)
-            >>> t = Ticket()
-            >>> t.decode(value)
-            (None, None)
-
-            Signature is not valid
-
-            >>> t = Ticket(cypher=None)
-            >>> value = 'cf-0eDoyN6VwP-IyZap4zTBjsHqqaZua4MkG'
-            >>> value += 'AA11HGdoZWxsbxBSjyg='
-            >>> t.decode(value)
-            (None, None)
-
-            Expired
-
-            >>> value = '1ZRcHGsYENF~lzezpMKFFF9~QBCQkqPlIMoG'
-            >>> value += 'AA11HGdoZWxsbxBSjyg='
-            >>> t.decode(value)
-            (None, None)
-
-            Invalid verification key
-
-            >>> t = Ticket()
-            >>> value = t.encode('test')
-            >>> t = Ticket(options={'CRYPTO_VALIDATION_KEY': 'x'})
-            >>> t.decode(value)
-            (None, None)
-
-            Invalid encryption key
-
-            >>> t = Ticket()
-            >>> value = t.encode('test')
-            >>> t = Ticket(options={'CRYPTO_ENCRYPTION_KEY': 'x'})
-            >>> t.decode(value)
-            (None, None)
         """
         if len(value) < 48:
             return (None, None)
@@ -215,6 +122,8 @@ class Ticket(object):
             return (None, None)
 
     def sign(self, value):
+        """ Compute hmac digest.
+        """
         h = self.hmac.copy()
         h.update(value)
         return h.digest()
