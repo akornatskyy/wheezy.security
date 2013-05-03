@@ -13,42 +13,20 @@ def authorized(wrapped=None, roles=None):
 
         ``roles`` - a list of authorized roles.
 
-        >>> from wheezy.security.principal import Principal
-        >>> class Context(object):
-        ...     principal = None
-        ...
-        ...     @authorized
-        ...     def op_a(self):
-        ...         return True
-        ...
-        ...     @authorized(roles=('operator',))
-        ...     def op_b(self):
-        ...         return True
-        >>> c = Context()
-        >>> c.op_a() # doctest: +ELLIPSIS +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-            ...
-        SecurityError: ...
-        >>> c.principal = Principal()
-        >>> c.op_a()
-        True
-        >>> c.principal = None
-        >>> c.op_b() # doctest: +ELLIPSIS +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-            ...
-        SecurityError: ...
-        >>> c.op_b() # doctest: +ELLIPSIS +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-            ...
-        SecurityError: ...
-        >>> c.principal = Principal(roles=('user',))
-        >>> c.op_b() # doctest: +ELLIPSIS +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-            ...
-        SecurityError: ...
-        >>> c.principal = Principal(roles=('user', 'operator'))
-        >>> c.op_b()
-        True
+        Here is an example::
+
+            from wheezy.security.principal import Principal
+
+            class Context(object):
+                principal = None
+
+                @authorized
+                def op_a(self):
+                    return True
+
+                @authorized(roles=('operator',))
+                def op_b(self):
+                    return True
     """
     def decorate(func):
         if roles:
