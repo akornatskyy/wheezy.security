@@ -15,9 +15,9 @@ authorization, and cannot easily be forged.
 :py:class:`~wheezy.security.crypto.ticket.Ticket` has the following
 characteristics:
 
-* It is valid for certain period of time, namely has explicitly set expiration
+* It is valid for certain period of time, in particular it has an explicitly set expiration
   time.
-* It value is signed to prove it authenticity.
+* Its value is signed to prove its authenticity.
 * It is encrypted to protect sensitive information.
 * It has noise to harden forgery.
 
@@ -25,28 +25,28 @@ characteristics:
 by passing the following arguments:
 
 * ``max_age`` - period of time (in seconds) this Ticket is considered valid.
-* ``salt`` - a random sequence that harden ticket forgery. That is prepended
-  to validation key and encryption key.
+* ``salt`` - a random sequence that hardens against ticket forgery. It is prepended
+  to the validation key and the encryption key.
 * ``digestmod`` - hash algorithm used with HMAC (Hash-based Message
   Authentication Code) to sign ticket. Defaults to SHA1.
 * ``cypher`` - cryptography algorithm. Defaults to AES128.
-* ``options`` - a dictionary that hold the following configuration values:
+* ``options`` - a dictionary that holds the following configuration values:
   ``CRYPTO_VALIDATION_KEY`` (used by signature) and
   ``CRYPTO_ENCRYPTION_KEY`` (used by encryption).
 
 Validation and Encryption Keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Keys used for validation and encryption are ensured to be of length 320 bits at
-least. :py:meth:`~wheezy.security.crypto.ticket.ensure_strong_key` function
+Keys used for validation and encryption are ensured to be at least of 320 bits length.
+The :py:meth:`~wheezy.security.crypto.ticket.ensure_strong_key` function
 appends HMAC signature to the key.
 
-If cryptography library is not available you will see a warning message::
+If the cryptography library is not available you will see a warning message::
 
     Ticket: cypher not available
 
-While Ticket continue to function even cryptography library is not installed
-it strongly recommended to be used in production environment.
+Although Ticket continues to function even cryptography library is not installed
+it strongly recommended to use cryptography in a production environment.
 
 Thread Safety
 ~~~~~~~~~~~~~
@@ -75,23 +75,23 @@ Here is typical use case when all possible configuration attributes are used::
             cypher=aes192,
             options=options)
 
-The ``ticket`` instance can be shared application wide. ``encode`` /
-``decode`` methods are used this way::
+The ``ticket`` instance can be shared application wide. The ``encode`` /
+``decode`` methods are used in the following way::
 
     protected_value = ticket.encode('hello')
 
     assert 'hello' == ticket.decode(protected_value)
 
-In case validity of ticket can not be confirmed ``decode`` method returns
+In case the validity of a ticket cannot be confirmed, the ``decode`` method returns
 ``None``.
 
 Extensibility
 ~~~~~~~~~~~~~
 
-Ticket ``cypher`` can be any callable that satisfy the following contract:
+Ticket ``cypher`` can be any callable that satisfies the following contract:
 
 * Initialization is called with encryption key. Returned object must be a
-  factory for actual algorithm instance.
+  factory for the actual algorithm instance.
 * Algorithm factory must return new algorithm via simple callable with no
   arguments.
 * Algorithm implementation must support two methods: ``encrypt(value)``
@@ -123,18 +123,18 @@ methods:
 * ``dump`` - converts instance to a string.
 * ``load`` - reverse operation to ``dump``.
 
-You can use ``Ticket`` to secure ``Principal`` pass across network boundary.
-Combining them both you can introduce authentication/authorization cookie
+You can use ``Ticket`` to securely pass ``Principal`` across network boundaries.
+Combining them both you can introduce an authentication/authorization cookie
 to your application.
 
 Authorization
 -------------
 
-Authorization specify access rights to resources and provide access control 
+Authorization specifies access rights to resources and provides access control 
 in particular to your application.
 
 You are able to request authorization by decorating your method with 
-:py:meth:`~wheezy.security.authorization.authorized`. Here is typical use
+:py:meth:`~wheezy.security.authorization.authorized`. Here is a typical use
 case::
 
     from wheezy.security import authorized
@@ -151,10 +151,10 @@ case::
          def approve_transfer(self):
              return True
              
-Note that :py:meth:`~wheezy.security.authorization.authorized` decorator
-requires the object to supply ``principal`` attribute of type 
+Note that the :py:meth:`~wheezy.security.authorization.authorized` decorator
+requires the object to supply a ``principal`` attribute of type 
 :py:class:`~wheezy.security.principal.Principal`.
 
-If caller is not authorized to perform requested operation
-:py:class:`~wheezy.security.errors.SecurityError` exception is raised.
+If a caller is not authorized to perform a requested operation,
+a :py:class:`~wheezy.security.errors.SecurityError` exception is raised.
 See :py:meth:`~wheezy.security.authorization.authorized` for more details.

@@ -3,7 +3,7 @@ Examples
 ========
 
 We start with a simple example. Before we proceed 
-let setup `virtualenv`_ environment::
+let's setup a `virtualenv`_ environment::
 
     $ virtualenv env
     $ env/bin/easy_install wheezy.security[pycrypto]
@@ -12,8 +12,8 @@ let setup `virtualenv`_ environment::
 Protecting Information
 ----------------------
 
-Let assume we would like protect some sensitive information, e.g. user id. We
-can encrypt it, add hash to proove validity and finally say that this
+Let's assume we would like to protect some sensitive information, e.g. user id. We
+can encrypt it, add a hash to prove validity and finally say that this
 value is valid for 20 minutes only::
 
     from wheezy.security.crypto import Ticket
