@@ -81,7 +81,7 @@ class TicketDecodeTestCase(unittest.TestCase):
         from wheezy.security.crypto.comp import u
         from wheezy.security.crypto.ticket import Ticket
         t = Ticket(cypher=None)
-        value = t.encode(u('\\u0430'))
+        value = t.encode(u('\u0430'))
         assert (None, None) == t.decode(value, 'ascii')
 
     def test_invalid_padding(self):
