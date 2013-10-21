@@ -76,15 +76,38 @@ decrypt = None
 aes128 = None
 aes192 = None
 aes256 = None
+aes128iv = None
+aes192iv = None
+aes256iv = None
 
 # Python Cryptography Toolkit (pycrypto)
 try:  # pragma: nocover
     from Crypto.Cipher import AES
+    from Crypto.Random import get_random_bytes
 
     # pycrypto interface
     block_size = lambda c: c.block_size
     encrypt = lambda c, v: c.encrypt(v)
     decrypt = lambda c, v: c.decrypt(v)
+
+    class AESIVCipher(object):
+        """ AES cipher that uses random IV for each encrypt operation
+            and prepend it to cipher text; decrypt splits input value into
+            IV and cipher text.
+        """
+        block_size = 16
+
+        def __init__(self, key):
+            self.key = key
+
+        def encrypt(self, v):
+            iv = get_random_bytes(16)
+            c = AES.new(self.key, AES.MODE_CBC, iv)
+            return iv + c.encrypt(v)
+
+        def decrypt(self, v):
+            c = AES.new(self.key, AES.MODE_CBC, v[:16])
+            return c.decrypt(v[16:])
 
     # suppored cyphers
     def aes(key, key_size=32):
@@ -95,9 +118,17 @@ try:  # pragma: nocover
         iv = key[:16]
         return lambda: AES.new(key, AES.MODE_CBC, iv)
 
+    def aesiv(key, key_size=32):
+        assert len(key) >= key_size
+        c = AESIVCipher(key[:key_size])
+        return lambda: c
+
     aes128 = lambda key: aes(key, 16)
     aes192 = lambda key: aes(key, 24)
     aes256 = lambda key: aes(key, 32)
+    aes128iv = lambda key: aesiv(key, 16)
+    aes192iv = lambda key: aesiv(key, 24)
+    aes256iv = lambda key: aesiv(key, 32)
 except ImportError:  # pragma: nocover
     # TODO: add fallback to other encryption providers
     pass
