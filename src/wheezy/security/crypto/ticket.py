@@ -28,14 +28,17 @@ EMPTY = b('')
 EPOCH = 1317212745
 
 
-def ensure_strong_key(key):
+def ensure_strong_key(key, digestmod):
     """ Translates a given key to a computed strong key of length
-        320 bit suitable for encryption.
+        3 * digestmode.digest_size suitable for encryption, e.g.
+        with digestmod set to ``sha1`` returns 480 bit (60 bytes) key.
     """
-    hmac = hmac_new(key, digestmod=sha1)
-    key = hmac.digest()
-    hmac.update(key)
-    return key + hmac.digest()
+    hmac = hmac_new(key, key, digestmod)
+    k1 = hmac.digest()
+    hmac.update(k1)
+    k2 = hmac.digest()
+    hmac.update(k2)
+    return k1 + k2 + hmac.digest()
 
 
 def timestamp():
@@ -61,12 +64,12 @@ class Ticket(object):
             digestmod = sha1
         options = options or {}
         key = b(salt + options.get('CRYPTO_VALIDATION_KEY', ''))
-        key = ensure_strong_key(key)
+        key = ensure_strong_key(key, digestmod)
         self.hmac = hmac_new(key, digestmod=digestmod)
         self.digest_size = digest_size(digestmod)
         if cypher:
             key = b(salt + options.get('CRYPTO_ENCRYPTION_KEY', ''))
-            key = ensure_strong_key(key)
+            key = ensure_strong_key(key, digestmod)
             self.cypher = cypher(key)
             self.block_size = block_size(self.cypher())
         else:

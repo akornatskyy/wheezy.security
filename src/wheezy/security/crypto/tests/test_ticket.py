@@ -13,14 +13,17 @@ class TicketTestCase(unittest.TestCase):
         from base64 import b64encode
         from wheezy.security.crypto.comp import b
         from wheezy.security.crypto.comp import n
+        from wheezy.security.crypto.comp import sha1
         from wheezy.security.crypto.ticket import ensure_strong_key
 
-        k = ensure_strong_key(b(''))
-        assert 40 == len(k)
+        k = ensure_strong_key(b(''), sha1)
+        assert 60 == len(k)
         s = n(b64encode(k))
-        assert '+9sdGxiqbAgyS31ktx+3Y3BpDh1fA7dyIanFu+fzE/Lc5EaX+NQGsA==' == s
-        s = n(b64encode(ensure_strong_key(b('abc'))))
-        assert 'zEfjwKoMKYRFRHbQYRCMCxEBd66sLMHe/H6umZFFQMixhLcp8jfwGQ==' == s
+        assert '+9sdGxiqbAgyS31ktx+3Y3BpDh1fA7dyIanFu+fzE/Lc5EaX+NQGs' + \
+               'KMipy3SvghXaQLqLrLZnSmqEkgv' == s
+        s = n(b64encode(ensure_strong_key(b('abc'), sha1)))
+        assert 'WzM6OJtOmiNYrFOSvypk3GjjyUMAcO5Oj0mHXQLAZGmiYN8OZxdtj' + \
+               'NR1mYddYPy+lo/k53pSG+n7T8hB' == s
 
     def test_encode(self):
         """ Test ticket encode.
@@ -93,20 +96,13 @@ class TicketDecodeTestCase(unittest.TestCase):
         t = Ticket()
         assert (None, None) == t.decode(value)
 
-    def test_signature_is_not_valid(self):
-        """ Signature is not valid.
-        """
-        from wheezy.security.crypto.ticket import Ticket
-        t = Ticket(cypher=None)
-        value = 'cf-0eDoyN6VwP-IyZap4zTBjsHqqaZua4MkGAA11HGdoZWxsbxBSjyg='
-        assert (None, None) == t.decode(value)
-
     def test_expired(self):
         """ Expired.
         """
         from wheezy.security.crypto.ticket import Ticket
         t = Ticket(cypher=None)
-        value = '1ZRcHGsYENF~lzezpMKFFF9~QBCQkqPlIMoGAA11HGdoZWxsbxBSjyg='
+        value = t.encode('test')
+        value = 'skAtojnOg2DKO66h6m8ZM4IdFI2sF-HVh9~hA76Kl-t0ZXN019MGVQ=='
         assert (None, None) == t.decode(value)
 
     def test_invalid_verification_key(self):
