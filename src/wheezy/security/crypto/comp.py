@@ -4,6 +4,8 @@
 
 import sys
 
+from warnings import warn
+
 
 PY3 = sys.version_info[0] >= 3
 
@@ -86,8 +88,11 @@ try:  # pragma: nocover
 
     # suppored cyphers
     def aes(key, key_size=32):
+        assert len(key) >= key_size
+        if len(key) < key_size + 16:
+            warn('AES%d: key and iv overlap.' % (key_size * 8))
         key = key[-key_size:]
-        iv = key[-16:]
+        iv = key[:16]
         return lambda: AES.new(key, AES.MODE_CBC, iv)
 
     aes128 = lambda key: aes(key, 16)
