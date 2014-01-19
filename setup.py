@@ -10,7 +10,7 @@ except:
 extra = {}
 try:
     from Cython.Build import cythonize
-    p = os.path.join('src', 'wheezy', 'core')
+    p = os.path.join('src', 'wheezy', 'security')
     extra['ext_modules'] = cythonize(
         [os.path.join(p, '*.py')],
         quiet=True)
