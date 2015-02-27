@@ -12,8 +12,11 @@ try:
     from Cython.Build import cythonize
     p = os.path.join('src', 'wheezy', 'security')
     extra['ext_modules'] = cythonize(
-        [os.path.join(p, '*.py')],
-        quiet=True)
+        [os.path.join(p, '*.py'),
+         os.path.join(p, 'crypto', '*.py')],
+        exclude=[os.path.join(p, '__init__.py'),
+                 os.path.join(p, 'crypto', '__init__.py')],
+        nthreads=2, quiet=True)
 except ImportError:
     pass
 
