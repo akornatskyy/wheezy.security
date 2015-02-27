@@ -12,9 +12,20 @@ PY3 = sys.version_info[0] >= 3
 if PY3:  # pragma: nocover
     bytes_type = bytes
     str_type = str
-    chr = lambda i: bytes((i,))
-    ord = lambda b: b
 
+    def chr(i):
+        return bytes((i,))
+
+    def ord(b):
+        return b
+else:  # pragma: nocover
+    bytes_type = str
+    str_type = unicode
+    chr = chr
+    ord = ord
+
+
+if PY3:  # pragma: nocover
     def n(s, encoding='latin1'):
         if isinstance(s, str_type):
             return s
@@ -23,14 +34,9 @@ if PY3:  # pragma: nocover
     def btos(b, encoding):
         return b.decode(encoding)
 
-    u = lambda s: s
-
+    def u(s):
+        return s
 else:  # pragma: nocover
-    bytes_type = str
-    str_type = unicode
-    chr = chr
-    ord = ord
-
     def n(s, encoding='latin1'):  # noqa
         if isinstance(s, bytes_type):
             return s
@@ -39,7 +45,8 @@ else:  # pragma: nocover
     def btos(b, encoding):  # noqa
         return b.decode(encoding)
 
-    u = lambda s: unicode(s, 'unicode_escape')
+    def u(s):
+        return unicode(s, 'unicode_escape')
 
 
 def b(s, encoding='latin1'):  # pragma: nocover
@@ -52,12 +59,18 @@ def b(s, encoding='latin1'):  # pragma: nocover
 try:  # pragma: nocover
     # Python 2.5+
     from hashlib import md5, sha1, sha224, sha256, sha384, sha512
-    digest_size = lambda d: d().digest_size
+
+    def digest_size(d):
+        return d().digest_size
 
     try:
         from hashlib import new as openssl_hash
-        ripemd160 = lambda: openssl_hash('ripemd160')
-        whirlpool = lambda: openssl_hash('whirlpool')
+
+        def ripemd160():
+            return openssl_hash('ripemd160')
+
+        def whirlpool():
+            return openssl_hash('whirlpool')
     except ValueError:
         ripemd160 = None
         whirlpool = None
@@ -65,7 +78,9 @@ except ImportError:  # pragma: nocover
     import md5  # noqa
     import sha as sha1  # noqa
     sha224 = sha256 = sha384 = sha512 = ripemd160 = whirlpool = None  # noqa
-    digest_size = lambda d: d.digest_size
+
+    def digest_size(d):
+        return d.digest_size
 
 # Encryption interface
 block_size = None
@@ -81,14 +96,20 @@ aes192iv = None
 aes256iv = None
 
 # Python Cryptography Toolkit (pycrypto)
-try:  # pragma: nocover
+try:  # noqa pragma: nocover
     from Crypto.Cipher import AES
     from Crypto.Random import get_random_bytes
 
     # pycrypto interface
-    block_size = lambda c: c.block_size
-    encrypt = lambda c, v: c.encrypt(v)
-    decrypt = lambda c, v: c.decrypt(v)
+
+    def block_size(c):
+        return c.block_size
+
+    def encrypt(c, v):
+        return c.encrypt(v)
+
+    def decrypt(c, v):
+        return c.decrypt(v)
 
     class AESIVCipher(object):
         """ AES cipher that uses random IV for each encrypt operation
@@ -123,12 +144,24 @@ try:  # pragma: nocover
         c = AESIVCipher(key[:key_size])
         return lambda: c
 
-    aes128 = lambda key: aes(key, 16)
-    aes192 = lambda key: aes(key, 24)
-    aes256 = lambda key: aes(key, 32)
-    aes128iv = lambda key: aesiv(key, 16)
-    aes192iv = lambda key: aesiv(key, 24)
-    aes256iv = lambda key: aesiv(key, 32)
+    def aes128(key):
+        return aes(key, 16)
+
+    def aes192(key):
+        return aes(key, 24)
+
+    def aes256(key):
+        return aes(key, 32)
+
+    def aes128iv(key):
+        return aesiv(key, 16)
+
+    def aes192iv(key):
+        return aesiv(key, 24)
+
+    def aes256iv(key):
+        return aesiv(key, 32)
+
 except ImportError:  # pragma: nocover
     # TODO: add fallback to other encryption providers
     pass
