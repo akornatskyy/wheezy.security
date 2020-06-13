@@ -28,12 +28,25 @@ class TicketTestCase(unittest.TestCase):
     def test_encode(self):
         """ Test ticket encode.
         """
+        from wheezy.security.crypto.comp import aes128
+        from wheezy.security.crypto.comp import aes128iv
+        from wheezy.security.crypto.comp import aes192
+        from wheezy.security.crypto.comp import aes192iv
+        from wheezy.security.crypto.comp import aes256
+        from wheezy.security.crypto.comp import aes256iv
+        for cypher in [aes128, aes128iv, aes192, aes192iv, aes256, aes256iv]:
+            self.encode(cypher=cypher)
+
+    def encode(self, cypher):
         from wheezy.security.crypto.comp import n
         from wheezy.security.crypto.comp import sha1
         from wheezy.security.crypto.ticket import Ticket
 
-        t = Ticket(digestmod=sha1)
-        assert 72 == len(t.encode(''))
+        t = Ticket(digestmod=sha1, cypher=cypher)
+        if cypher:
+            assert len(t.encode('')) >= 72
+        else:  # pragma: nocover
+            assert len(t.encode('')) == 48
 
         x = t.encode('hello')
         text, time_left = t.decode(x)
@@ -90,11 +103,13 @@ class TicketDecodeTestCase(unittest.TestCase):
     def test_invalid_padding(self):
         """ Invalid padding.
         """
+        from wheezy.security.crypto.comp import aes128 as cypher
         from wheezy.security.crypto.ticket import Ticket
         t = Ticket(cypher=None)
         value = t.encode('a' * 31)
-        t = Ticket()
-        assert (None, None) == t.decode(value)
+        if cypher:
+            t = Ticket(cypher=cypher)
+            assert (None, None) == t.decode(value)
 
     def test_expired(self):
         """ Expired.
@@ -117,8 +132,12 @@ class TicketDecodeTestCase(unittest.TestCase):
     def test_invalid_encryption_key(self):
         """ Invalid encryption key.
         """
+        from wheezy.security.crypto.comp import aes128 as cypher
         from wheezy.security.crypto.ticket import Ticket
-        t = Ticket()
+        t = Ticket(cypher=cypher)
         value = t.encode('test')
         t = Ticket(options={'CRYPTO_ENCRYPTION_KEY': 'x'})
-        assert (None, None) == t.decode(value)
+        if cypher:
+            assert (None, None) == t.decode(value)
+        else:  # pragma: nocover
+            assert ('test', 900) == t.decode(value)

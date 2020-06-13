@@ -98,7 +98,12 @@ aes256iv = None
 # Python Cryptography Toolkit (pycrypto)
 try:  # noqa pragma: nocover
     from Crypto.Cipher import AES
-    from Crypto.Random import get_random_bytes
+    if PY3:  # pragma: nocover
+        # Crypto/Random/_UserFriendlyRNG.py:77: AttributeError
+        # AttributeError: module 'time' has no attribute 'clock'
+        from secrets import token_bytes as get_random_bytes
+    else:  # pragma: nocover
+        from Crypto.Random import get_random_bytes
 
     # pycrypto interface
 
@@ -133,7 +138,7 @@ try:  # noqa pragma: nocover
     # suppored cyphers
     def aes(key, key_size=32):
         assert len(key) >= key_size
-        if len(key) < key_size + 16:
+        if len(key) < key_size + 16:  # pragma: nocover
             warn('AES%d: key and iv overlap.' % (key_size * 8))
         key = key[-key_size:]
         iv = key[:16]
