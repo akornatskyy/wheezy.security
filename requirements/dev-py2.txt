@@ -9,6 +9,7 @@ atomicwrites==1.4.0       # via pytest
 attrs==19.3.0             # via pytest
 backports.functools-lru-cache==1.6.1  # via wcwidth
 click==7.1.2              # via pip-tools
+colorama==0.4.3           # via pytest
 configparser==4.0.2       # via importlib-metadata
 contextlib2==0.6.0.post1  # via importlib-metadata, zipp
 coverage==5.2             # via pytest-cov
@@ -22,7 +23,6 @@ pep8==1.7.1               # via pytest-pep8
 pip-tools==5.2.1          # via -r requirements/dev.in
 pluggy==0.13.1            # via pytest
 py==1.9.0                 # via pytest
-pycrypto==2.6.1; platform_system != 'Windows'           # via -r requirements/dev.in
 pyparsing==2.4.7          # via packaging
 pytest-cache==1.0         # via pytest-pep8
 pytest-cov==2.10.0        # via -r requirements/dev.in

@@ -110,6 +110,12 @@ class TicketDecodeTestCase(unittest.TestCase):
         if cypher:
             t = Ticket(cypher=cypher)
             assert (None, None) == t.decode(value)
+            assert (None, None) == t.decode(
+                '9zb2S-xu~M54KVqlcnXHzQAvYcMOyzLBWtQm9IQ2NNuWvsWALCU3'
+                '-XSc~tZGWHiINGajQ1XpSanI8TJ8DcwuG0yPa9vp1QqZ8Cjruixu'
+                'ARWDOkSXnQv5Jy8Ygqq3Yu6umJDH0Z~NdpZWp9HvJhcQrYKfbDaY'
+                'IsW~~-DVv-AQDYW3cs7qgw-U0IOisN~wq~joW1XRQA=='
+            )
 
     def test_expired(self):
         """ Expired.

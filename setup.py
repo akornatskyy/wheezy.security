@@ -62,6 +62,9 @@ setup(
     ],
     extras_require={
         'pycrypto': ['pycrypto'],
+        'pycryptodome': ['pycryptodome'],
+        'pycryptodomex': ['pycryptodomex'],
+        'cryptography': ['cryptography'],
         'dev': [
             'pytest',
             'pytest-pep8',

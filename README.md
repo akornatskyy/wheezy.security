@@ -9,6 +9,13 @@ is a lightweight security library that provides integration with:
 
 - [pycrypto](https://www.dlitz.net/software/pycrypto) - The Python
   Cryptography Toolkit
+- [pycryptodome](https://www.pycryptodome.org) - PyCryptodome
+  is a fork of PyCrypto. It brings several enhancements.
+- [pycryptodomex](https://www.pycryptodome.org) - PyCryptodomex
+  is a library independent of the PyCrypto.
+- [cryptography](https://pypi.org/project/cryptography/) - cryptography
+  is a package which provides cryptographic recipes and primitives to
+  Python developers.
 
 It is optimized for performance, well tested and documented.
 
@@ -18,7 +25,7 @@ Resources:
   and [issues](https://github.com/akornatskyy/wheezy.security/issues)
   tracker are available on
   [github](https://github.com/akornatskyy/wheezy.security)
-- [documentation](http://readthedocs.org/builds/wheezysecurity)
+- [documentation](https://wheezysecurity.readthedocs.io/en/latest/)
 
 ## Install
 
@@ -36,6 +43,9 @@ built-in support specify extra requirements:
 
 ```sh
 pip install wheezy.security[pycrypto]
+pip install wheezy.security[pycryptodome]
+pip install wheezy.security[pycryptodomex]
+pip install wheezy.security[cryptography]
 ```
 
 If you run into any issue or have comments, go ahead and add on

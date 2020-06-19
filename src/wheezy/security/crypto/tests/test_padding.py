@@ -38,5 +38,6 @@ class PaddingTestCase(unittest.TestCase):
         assert 'workbook' == s
         assert unpad('', 8) is None
         # incorrect padding
+        assert unpad(unhexlify(b('666f720000000005')), 4) is None
         assert unpad('abc', 8) is None
         assert unpad('abcd', 8) is None
