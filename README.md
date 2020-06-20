@@ -4,11 +4,11 @@
 [![Documentation Status](https://readthedocs.org/projects/wheezysecurity/badge/?version=latest)](https://wheezysecurity.readthedocs.io/en/latest/?badge=latest)
 
 [wheezy.security](https://pypi.org/project/wheezy.security/) is a
-[python](http://www.python.org) package written in pure Python code. It
+[python](https://www.python.org) package written in pure Python code. It
 is a lightweight security library that provides integration with:
 
 - [pycrypto](https://www.dlitz.net/software/pycrypto) - The Python
-  Cryptography Toolkit
+  Cryptography Toolkit.
 - [pycryptodome](https://www.pycryptodome.org) - PyCryptodome
   is a fork of PyCrypto. It brings several enhancements.
 - [pycryptodomex](https://www.pycryptodome.org) - PyCryptodomex
@@ -30,7 +30,7 @@ Resources:
 ## Install
 
 [wheezy.security](https://pypi.org/project/wheezy.security/) requires
-[python](http://www.python.org) version 2.4 to 2.7 or 3.2+. It is
+[python](https://www.python.org) version 2.4 to 2.7 or 3.2+. It is
 independent of operating system. You can install it from
 [pypi](https://pypi.org/project/wheezy.security/) site:
 
