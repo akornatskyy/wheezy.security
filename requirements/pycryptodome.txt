@@ -4,4 +4,4 @@
 #
 #    pip-compile --output-file=requirements/pycryptodome.txt requirements/pycryptodome.in
 #
-pycryptodome==3.9.8       # via -r requirements/pycryptodome.in
+pycryptodome==3.9.8; platform_system != 'Windows' and implementation_name != 'pypy'       # via -r requirements/pycryptodome.in
