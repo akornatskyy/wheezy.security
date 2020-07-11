@@ -9,4 +9,5 @@ from wheezy.security.errors import SecurityError
 from wheezy.security.principal import Principal
 
 
-__version__ = '0.1'
+__all__ = ("authorized", "SecurityError", "Principal")
+__version__ = "0.1"

@@ -3,7 +3,6 @@
 """
 
 import sys
-
 from os import urandom
 from warnings import warn
 
@@ -21,7 +20,7 @@ if PY3:  # pragma: nocover
         return b
 else:  # pragma: nocover
     bytes_type = str
-    str_type = unicode
+    str_type = unicode  # noqa: F821
     chr = chr
     ord = ord
 
@@ -47,7 +46,7 @@ else:  # pragma: nocover
         return b.decode(encoding)
 
     def u(s):
-        return unicode(s, 'unicode_escape')
+        return unicode(s, 'unicode_escape')  # noqa: F821
 
 
 def b(s, encoding='latin1'):  # pragma: nocover
@@ -96,6 +95,7 @@ def encrypt(c, v):  # pragma: nocover
 
 def decrypt(c, v):  # pragma: nocover
     return c.decrypt(v)
+
 
 # Supported cyphers
 aes = None
