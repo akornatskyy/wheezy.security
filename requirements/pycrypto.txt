@@ -4,4 +4,4 @@
 #
 #    pip-compile --output-file=requirements/pycrypto.txt requirements/pycrypto.in
 #
-pycrypto==2.6.1; platform_system != 'Windows'  # via -r requirements/pycrypto.in
+pycrypto==2.6.1; platform_system != 'Windows' and implementation_name != 'pypy'  # via -r requirements/pycrypto.in
