@@ -1,7 +1,9 @@
 # wheezy.security
 
 [![Build Status](https://travis-ci.org/akornatskyy/wheezy.security.svg?branch=master)](https://travis-ci.org/akornatskyy/wheezy.security)
+[![Coverage Status](https://coveralls.io/repos/github/akornatskyy/wheezy.security/badge.svg?branch=master)](https://coveralls.io/github/akornatskyy/wheezy.security?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/wheezysecurity/badge/?version=latest)](https://wheezysecurity.readthedocs.io/en/latest/?badge=latest)
+[![pypi version](https://badge.fury.io/py/wheezy.security.svg)](https://badge.fury.io/py/wheezy.security)
 
 [wheezy.security](https://pypi.org/project/wheezy.security/) is a
 [python](https://www.python.org) package written in pure Python code. It
@@ -35,7 +37,7 @@ independent of operating system. You can install it from
 [pypi](https://pypi.org/project/wheezy.security/) site:
 
 ```sh
-pip install wheezy.security
+pip install -U wheezy.security
 ```
 
 If you would like take benefit of one of cryptography library that has
