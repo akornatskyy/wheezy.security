@@ -1,9 +1,7 @@
-
 """ Unit tests for ``wheezy.security.authorization``.
 """
 
 import unittest
-
 
 from wheezy.security.authorization import authorized
 from wheezy.security.principal import Principal
@@ -16,17 +14,17 @@ class MyService(object):
     def op_a(self):
         return True
 
-    @authorized(roles=('operator',))
+    @authorized(roles=("operator",))
     def op_b(self):
         return True
 
 
 class AuthorizedTestCase(unittest.TestCase):
-
     def test_access_by_anonymous(self):
         """ Ensure anonymous has no access.
         """
         from wheezy.security.errors import SecurityError
+
         s = MyService()
 
         self.assertRaises(SecurityError, lambda: s.op_a())
@@ -37,6 +35,7 @@ class AuthorizedTestCase(unittest.TestCase):
             not to `op_b`.
         """
         from wheezy.security.errors import SecurityError
+
         s = MyService()
 
         s.principal = Principal()
@@ -48,6 +47,6 @@ class AuthorizedTestCase(unittest.TestCase):
         """
         s = MyService()
 
-        s.principal = Principal(roles=('user', 'operator'))
+        s.principal = Principal(roles=("user", "operator"))
         assert s.op_a()
         assert s.op_b()

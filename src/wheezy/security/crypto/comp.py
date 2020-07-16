@@ -1,11 +1,9 @@
-
 """ ``comp`` module.
 """
 
 import sys
 from os import urandom
 from warnings import warn
-
 
 PY3 = sys.version_info[0] >= 3
 
@@ -18,6 +16,8 @@ if PY3:  # pragma: nocover
 
     def ord(b):
         return b
+
+
 else:  # pragma: nocover
     bytes_type = str
     str_type = unicode  # noqa: F821
@@ -26,7 +26,8 @@ else:  # pragma: nocover
 
 
 if PY3:  # pragma: nocover
-    def n(s, encoding='latin1'):
+
+    def n(s, encoding="latin1"):
         if isinstance(s, str_type):
             return s
         return s.decode(encoding)
@@ -36,8 +37,11 @@ if PY3:  # pragma: nocover
 
     def u(s):
         return s
+
+
 else:  # pragma: nocover
-    def n(s, encoding='latin1'):  # noqa
+
+    def n(s, encoding="latin1"):  # noqa
         if isinstance(s, bytes_type):
             return s
         return s.encode(encoding)
@@ -46,10 +50,10 @@ else:  # pragma: nocover
         return b.decode(encoding)
 
     def u(s):
-        return unicode(s, 'unicode_escape')  # noqa: F821
+        return unicode(s, "unicode_escape")  # noqa: F821
 
 
-def b(s, encoding='latin1'):  # pragma: nocover
+def b(s, encoding="latin1"):  # pragma: nocover
     if isinstance(s, bytes_type):
         return s
     return s.encode(encoding)
@@ -67,20 +71,23 @@ try:  # pragma: nocover
         from hashlib import new as openssl_hash
 
         def ripemd160():
-            return openssl_hash('ripemd160')
+            return openssl_hash("ripemd160")
 
         def whirlpool():
-            return openssl_hash('whirlpool')
+            return openssl_hash("whirlpool")
+
     except ValueError:
         ripemd160 = None
         whirlpool = None
 except ImportError:  # pragma: nocover
     import md5  # noqa
     import sha as sha1  # noqa
+
     sha224 = sha256 = sha384 = sha512 = ripemd160 = whirlpool = None  # noqa
 
     def digest_size(d):
         return d.digest_size
+
 
 # Encryption interface
 
@@ -118,6 +125,7 @@ try:  # noqa pragma: nocover
             and prepend it to cipher text; decrypt splits input value into
             IV and cipher text.
         """
+
         block_size = 16
 
         def __init__(self, key):
@@ -136,27 +144,27 @@ try:  # noqa pragma: nocover
     def aes(key, key_size=32):  # pragma: nocover
         assert len(key) >= key_size
         if len(key) < key_size + 16:  # pragma: nocover
-            warn('AES%d: key and iv overlap.' % (key_size * 8))
+            warn("AES%d: key and iv overlap." % (key_size * 8))
         key = key[-key_size:]
         iv = key[:16]
         return lambda: AES.new(key, AES.MODE_CBC, iv)
 
+
 except ImportError:  # pragma: nocover
     try:  # pragma: nocover
-        from cryptography.hazmat.primitives.ciphers \
-            import Cipher, algorithms, modes
         from cryptography.hazmat.backends import default_backend
+        from cryptography.hazmat.primitives.ciphers import (
+            Cipher,
+            algorithms,
+            modes,
+        )
 
         backend = default_backend()
 
         class AESCipher(object):  # pragma: nocover
-
             def __init__(self, key, iv):
                 alg = algorithms.AES(key)
-                self.c = Cipher(
-                    alg,
-                    modes.CBC(iv),
-                    backend=backend)
+                self.c = Cipher(alg, modes.CBC(iv), backend=backend)
                 self.block_size = alg.block_size
 
             def encrypt(self, v):
@@ -180,7 +188,7 @@ except ImportError:  # pragma: nocover
 
             def encrypt(self, v):
                 iv = urandom(16)
-                print('len', len(iv))
+                print("len", len(iv))
                 c = AESCipher(self.key, iv)
                 return iv + c.encrypt(v)
 
@@ -192,7 +200,7 @@ except ImportError:  # pragma: nocover
         def aes(key, key_size=32):  # pragma: nocover
             assert len(key) >= key_size
             if len(key) < key_size + 16:  # pragma: nocover
-                warn('AES%d: key and iv overlap.' % (key_size * 8))
+                warn("AES%d: key and iv overlap." % (key_size * 8))
             key = key[-key_size:]
             iv = key[:16]
             return lambda: AESCipher(key, iv)
@@ -203,6 +211,7 @@ except ImportError:  # pragma: nocover
 
 
 if aes:
+
     def aes128(key):
         return aes(key, 16)
 

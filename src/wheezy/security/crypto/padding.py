@@ -1,11 +1,9 @@
-
 """ ``padding`` module.
 
     see http://www.di-mgt.com.au/cryptopad.html
 """
 
-from wheezy.security.crypto.comp import chr
-from wheezy.security.crypto.comp import ord
+from wheezy.security.crypto.comp import chr, ord
 
 
 def pad(s, block_size):

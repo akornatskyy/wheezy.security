@@ -1,4 +1,3 @@
-
 """ ``authorization`` module.
 """
 
@@ -28,8 +27,10 @@ def authorized(wrapped=None, roles=None):
                 def op_b(self):
                     return True
     """
+
     def decorate(func):
         if roles:
+
             def check_roles(context, *args, **kwargs):
                 principal = context.principal
                 if principal:
@@ -38,18 +39,22 @@ def authorized(wrapped=None, roles=None):
                         if role in principal_roles:
                             break
                     else:
-                        raise SecurityError('Not authorized.')
+                        raise SecurityError("Not authorized.")
                     return func(context, *args, **kwargs)
                 else:
-                    raise SecurityError('Not authorized.')
+                    raise SecurityError("Not authorized.")
+
             return check_roles
         else:
+
             def check_authenticated(context, *args, **kwargs):
                 if context.principal:
                     return func(context, *args, **kwargs)
                 else:
-                    raise SecurityError('Not authorized.')
+                    raise SecurityError("Not authorized.")
+
             return check_authenticated
+
     if wrapped is None:
         return decorate
     else:
