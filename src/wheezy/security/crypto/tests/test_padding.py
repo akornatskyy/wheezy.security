@@ -6,8 +6,7 @@ import unittest
 
 class PaddingTestCase(unittest.TestCase):
     def test_pad(self):
-        """ Test pad.
-        """
+        """Test pad."""
         from binascii import hexlify
 
         from wheezy.security.crypto.comp import b, n
@@ -21,8 +20,7 @@ class PaddingTestCase(unittest.TestCase):
         assert "0000000000000008" == s
 
     def test_unpad(self):
-        """ Test unpad.
-        """
+        """Test unpad."""
         from binascii import unhexlify
 
         from wheezy.security.crypto.comp import b, n

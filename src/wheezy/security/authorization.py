@@ -5,27 +5,27 @@ from wheezy.security.errors import SecurityError
 
 
 def authorized(wrapped=None, roles=None):
-    """ Demand the user accessing protected resource is
-        authenticated and optionally in one of allowed ``roles``.
+    """Demand the user accessing protected resource is
+    authenticated and optionally in one of allowed ``roles``.
 
-        Requires wrapped object to provide attribute principal.
+    Requires wrapped object to provide attribute principal.
 
-        ``roles`` - a list of authorized roles.
+    ``roles`` - a list of authorized roles.
 
-        Here is an example::
+    Here is an example::
 
-            from wheezy.security.principal import Principal
+        from wheezy.security.principal import Principal
 
-            class Context(object):
-                principal = None
+        class Context(object):
+            principal = None
 
-                @authorized
-                def op_a(self):
-                    return True
+            @authorized
+            def op_a(self):
+                return True
 
-                @authorized(roles=('operator',))
-                def op_b(self):
-                    return True
+            @authorized(roles=('operator',))
+            def op_b(self):
+                return True
     """
 
     def decorate(func):

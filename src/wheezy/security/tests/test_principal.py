@@ -6,8 +6,8 @@ import unittest
 
 class PrincipalTestCase(unittest.TestCase):
     def test_dump(self):
-        """ Ensure the principal object is dumped correctly
-            with delimiters.
+        """Ensure the principal object is dumped correctly
+        with delimiters.
         """
         from wheezy.security.principal import Principal
 
@@ -23,8 +23,7 @@ class PrincipalTestCase(unittest.TestCase):
         assert "79053\x1fa;b\x1fJohn\x1fanything" == s
 
     def test_load(self):
-        """
-        """
+        """"""
         from wheezy.security.principal import Principal
 
         p = Principal.load("\x1f\x1f\x1f")

@@ -21,8 +21,7 @@ class MyService(object):
 
 class AuthorizedTestCase(unittest.TestCase):
     def test_access_by_anonymous(self):
-        """ Ensure anonymous has no access.
-        """
+        """Ensure anonymous has no access."""
         from wheezy.security.errors import SecurityError
 
         s = MyService()
@@ -31,8 +30,8 @@ class AuthorizedTestCase(unittest.TestCase):
         self.assertRaises(SecurityError, lambda: s.op_b())
 
     def test_access_by_authenticated(self):
-        """ Ensure authenticated principal has access to `op_a` but
-            not to `op_b`.
+        """Ensure authenticated principal has access to `op_a` but
+        not to `op_b`.
         """
         from wheezy.security.errors import SecurityError
 
@@ -43,8 +42,7 @@ class AuthorizedTestCase(unittest.TestCase):
         self.assertRaises(SecurityError, lambda: s.op_b())
 
     def test_access_by_authorized(self):
-        """ Ensure principal with role `operator` has access to `op_b`.
-        """
+        """Ensure principal with role `operator` has access to `op_b`."""
         s = MyService()
 
         s.principal = Principal(roles=("user", "operator"))

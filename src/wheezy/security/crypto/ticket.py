@@ -27,9 +27,9 @@ EPOCH = 1317212745
 
 
 def ensure_strong_key(key, digestmod):
-    """ Translates a given key to a computed strong key of length
-        3 * digestmode.digest_size suitable for encryption, e.g.
-        with digestmod set to ``sha1`` returns 480 bit (60 bytes) key.
+    """Translates a given key to a computed strong key of length
+    3 * digestmode.digest_size suitable for encryption, e.g.
+    with digestmod set to ``sha1`` returns 480 bit (60 bytes) key.
     """
     hmac = hmac_new(key, key, digestmod)
     k1 = hmac.digest()
@@ -44,12 +44,12 @@ def timestamp():
 
 
 class Ticket(object):
-    """ Protects sensitive information (e.g. user id).
+    """Protects sensitive information (e.g. user id).
 
-        Default policy applies verification and encryption.
-        Verification is provided by ``hmac`` initialized with ``sha1``
-        digestmod. Encryption is provided if available, by default
-        it attempts to use AES cypher.
+    Default policy applies verification and encryption.
+    Verification is provided by ``hmac`` initialized with ``sha1``
+    digestmod. Encryption is provided if available, by default
+    it attempts to use AES cypher.
     """
 
     __slots__ = ("cypher", "max_age", "hmac", "digest_size", "block_size")
@@ -79,8 +79,7 @@ class Ticket(object):
             warn("Ticket: cypher not available", stacklevel=2)
 
     def encode(self, value, encoding="UTF-8"):
-        """ Encode ``value`` according to ticket policy.
-        """
+        """Encode ``value`` according to ticket policy."""
         value = b(value, encoding)
         expires = pack("<i", timestamp() + self.max_age)
         noise = urandom(12)
@@ -92,8 +91,7 @@ class Ticket(object):
         )
 
     def decode(self, value, encoding="UTF-8"):
-        """ Decode ``value`` according to ticket policy.
-        """
+        """Decode ``value`` according to ticket policy."""
         if len(value) < 48:
             return (None, None)
         try:
@@ -122,8 +120,7 @@ class Ticket(object):
             return (None, None)
 
     def sign(self, value):
-        """ Compute hmac digest.
-        """
+        """Compute hmac digest."""
         h = self.hmac.copy()
         h.update(value)
         return h.digest()

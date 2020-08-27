@@ -6,8 +6,7 @@ import unittest
 
 class TicketTestCase(unittest.TestCase):
     def test_ensure_strong_key(self):
-        """ Ensure strong key
-        """
+        """Ensure strong key"""
         from base64 import b64encode
 
         from wheezy.security.crypto.comp import b, n, sha1
@@ -29,8 +28,7 @@ class TicketTestCase(unittest.TestCase):
         )
 
     def test_encode(self):
-        """ Test ticket encode.
-        """
+        """Test ticket encode."""
         from wheezy.security.crypto.comp import (
             aes128,
             aes128iv,
@@ -85,24 +83,21 @@ class TicketDecodeTestCase(unittest.TestCase):
         warnings.simplefilter("default")
 
     def test_invalid_length(self):
-        """ The value is at least 48 in length.
-        """
+        """The value is at least 48 in length."""
         from wheezy.security.crypto.ticket import Ticket
 
         t = Ticket(cypher=None)
         assert (None, None) == t.decode("a" * 47)
 
     def test_invalid_base64_string(self):
-        """ Invalid base64 string.
-        """
+        """Invalid base64 string."""
         from wheezy.security.crypto.ticket import Ticket
 
         t = Ticket(cypher=None)
         assert (None, None) == t.decode("D" * 57)
 
     def test_unicode_error(self):
-        """ Unicode error.
-        """
+        """Unicode error."""
         from wheezy.security.crypto.comp import u
         from wheezy.security.crypto.ticket import Ticket
 
@@ -111,8 +106,7 @@ class TicketDecodeTestCase(unittest.TestCase):
         assert (None, None) == t.decode(value, "ascii")
 
     def test_invalid_padding(self):
-        """ Invalid padding.
-        """
+        """Invalid padding."""
         from wheezy.security.crypto.comp import aes128 as cypher
         from wheezy.security.crypto.ticket import Ticket
 
@@ -129,8 +123,7 @@ class TicketDecodeTestCase(unittest.TestCase):
             )
 
     def test_expired(self):
-        """ Expired.
-        """
+        """Expired."""
         from wheezy.security.crypto.ticket import Ticket
 
         t = Ticket(cypher=None)
@@ -139,8 +132,7 @@ class TicketDecodeTestCase(unittest.TestCase):
         assert (None, None) == t.decode(value)
 
     def test_invalid_verification_key(self):
-        """ Invalid verification key.
-        """
+        """Invalid verification key."""
         from wheezy.security.crypto.ticket import Ticket
 
         t = Ticket()
@@ -149,8 +141,7 @@ class TicketDecodeTestCase(unittest.TestCase):
         assert (None, None) == t.decode(value)
 
     def test_invalid_encryption_key(self):
-        """ Invalid encryption key.
-        """
+        """Invalid encryption key."""
         from wheezy.security.crypto.comp import aes128 as cypher
         from wheezy.security.crypto.ticket import Ticket
 

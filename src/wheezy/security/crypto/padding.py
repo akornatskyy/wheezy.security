@@ -7,14 +7,14 @@ from wheezy.security.crypto.comp import chr, ord
 
 
 def pad(s, block_size):
-    """ Pad with zeros except make the last byte equal to the
-        number of padding bytes.
+    """Pad with zeros except make the last byte equal to the
+    number of padding bytes.
 
-        The convention with this method is usually always to
-        add a padding string, even if the original plaintext was
-        already an exact multiple of `block_size` bytes.
+    The convention with this method is usually always to
+    add a padding string, even if the original plaintext was
+    already an exact multiple of `block_size` bytes.
 
-        ``s`` - byte string.
+    ``s`` - byte string.
     """
     n = len(s) % block_size
     if n > 0:
@@ -25,9 +25,9 @@ def pad(s, block_size):
 
 
 def unpad(s, block_size):
-    """ Strip right by the last byte number.
+    """Strip right by the last byte number.
 
-        ``s`` - byte string.
+    ``s`` - byte string.
     """
     n = len(s)
     if n == 0:

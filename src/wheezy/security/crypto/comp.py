@@ -121,9 +121,9 @@ try:  # noqa pragma: nocover
         from Crypto.Cipher import AES
 
     class AESIVCipher(object):  # pragma: nocover
-        """ AES cipher that uses random IV for each encrypt operation
-            and prepend it to cipher text; decrypt splits input value into
-            IV and cipher text.
+        """AES cipher that uses random IV for each encrypt operation
+        and prepend it to cipher text; decrypt splits input value into
+        IV and cipher text.
         """
 
         block_size = 16
@@ -176,9 +176,9 @@ except ImportError:  # pragma: nocover
                 return d.update(v) + d.finalize()
 
         class AESIVCipher(object):  # pragma: nocover
-            """ AES cipher that uses random IV for each encrypt operation
-                and prepend it to cipher text; decrypt splits input value into
-                IV and cipher text.
+            """AES cipher that uses random IV for each encrypt operation
+            and prepend it to cipher text; decrypt splits input value into
+            IV and cipher text.
             """
 
             block_size = 16
