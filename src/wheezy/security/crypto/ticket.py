@@ -11,9 +11,7 @@ from warnings import warn
 
 from wheezy.security.crypto.comp import (
     aes128,
-    b,
     block_size,
-    btos,
     decrypt,
     digest_size,
     encrypt,
@@ -21,8 +19,8 @@ from wheezy.security.crypto.comp import (
 )
 from wheezy.security.crypto.padding import pad, unpad
 
-BASE64_ALTCHARS = b("-~")
-EMPTY = b("")
+BASE64_ALTCHARS = b"-~"
+EMPTY = b""
 EPOCH = 1317212745
 
 
@@ -65,12 +63,16 @@ class Ticket(object):
             )
             digestmod = sha1
         options = options or {}
-        key = b(salt + options.get("CRYPTO_VALIDATION_KEY", ""))
+        key = (salt + options.get("CRYPTO_VALIDATION_KEY", "")).encode(
+            "latin1"
+        )
         key = ensure_strong_key(key, digestmod)
         self.hmac = hmac_new(key, digestmod=digestmod)
         self.digest_size = digest_size(digestmod)
         if cypher:
-            key = b(salt + options.get("CRYPTO_ENCRYPTION_KEY", ""))
+            key = (salt + options.get("CRYPTO_ENCRYPTION_KEY", "")).encode(
+                "latin1"
+            )
             key = ensure_strong_key(key, digestmod)
             self.cypher = cypher(key)
             self.block_size = block_size(self.cypher())
@@ -80,14 +82,14 @@ class Ticket(object):
 
     def encode(self, value, encoding="UTF-8"):
         """Encode ``value`` according to ticket policy."""
-        value = b(value, encoding)
+        value = value.encode(encoding)
         expires = pack("<i", timestamp() + self.max_age)
         noise = urandom(12)
         value = EMPTY.join((noise[:4], expires, noise[4:8], value, noise[8:]))
         if self.cypher:
             value = encrypt(self.cypher(), pad(value, self.block_size))
-        return btos(
-            b64encode(self.sign(value) + value, BASE64_ALTCHARS), "latin1"
+        return b64encode(self.sign(value) + value, BASE64_ALTCHARS).decode(
+            "latin1"
         )
 
     def decode(self, value, encoding="UTF-8"):
@@ -95,7 +97,7 @@ class Ticket(object):
         if len(value) < 48:
             return (None, None)
         try:
-            value = b64decode(b(value), BASE64_ALTCHARS)
+            value = b64decode(value.encode("latin1"), BASE64_ALTCHARS)
         except (TypeError, BinError):
             return (None, None)
         signature = value[: self.digest_size]
@@ -115,7 +117,7 @@ class Ticket(object):
         if time_left < 0 or time_left > self.max_age:
             return (None, None)
         try:
-            return (btos(value, encoding), time_left)
+            return (value.decode(encoding), time_left)
         except UnicodeDecodeError:
             return (None, None)
 

@@ -3,8 +3,6 @@
     see http://www.di-mgt.com.au/cryptopad.html
 """
 
-from wheezy.security.crypto.comp import chr, ord
-
 
 def pad(s, block_size):
     """Pad with zeros except make the last byte equal to the
@@ -21,7 +19,7 @@ def pad(s, block_size):
         n = block_size - n
     else:
         n = block_size
-    return (chr(0) * (n - 1)).join((s, chr(n)))
+    return (bytes((0,)) * (n - 1)).join((s, bytes((n,))))
 
 
 def unpad(s, block_size):
@@ -35,7 +33,7 @@ def unpad(s, block_size):
     n = n % block_size
     if n > 0:
         return None
-    n = ord(s[-1])
+    n = s[-1]
     if n > block_size:
         return None
     return s[:-n]

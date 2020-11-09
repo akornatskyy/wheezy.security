@@ -32,8 +32,8 @@ Resources:
 ## Install
 
 [wheezy.security](https://pypi.org/project/wheezy.security/) requires
-[python](https://www.python.org) version 2.4 to 2.7 or 3.2+. It is
-independent of operating system. You can install it from
+[python](https://www.python.org) version 3.6+. It is independent of operating
+system. You can install it from
 [pypi](https://pypi.org/project/wheezy.security/) site:
 
 ```sh

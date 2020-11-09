@@ -1,92 +1,28 @@
 """ ``comp`` module.
 """
 
-import sys
+from hashlib import md5, sha1, sha224, sha256, sha384, sha512
 from os import urandom
 from warnings import warn
 
-PY3 = sys.version_info[0] >= 3
 
-if PY3:  # pragma: nocover
-    bytes_type = bytes
-    str_type = str
-
-    def chr(i):
-        return bytes((i,))
-
-    def ord(b):
-        return b
+def digest_size(d):
+    return d().digest_size
 
 
-else:  # pragma: nocover
-    bytes_type = str
-    str_type = unicode  # noqa: F821
-    chr = chr
-    ord = ord
+try:
+    from hashlib import new as openssl_hash
+
+    def ripemd160():
+        return openssl_hash("ripemd160")  # pragma: nocover
+
+    def whirlpool():
+        return openssl_hash("whirlpool")  # pragma: nocover
 
 
-if PY3:  # pragma: nocover
-
-    def n(s, encoding="latin1"):
-        if isinstance(s, str_type):
-            return s
-        return s.decode(encoding)
-
-    def btos(b, encoding):
-        return b.decode(encoding)
-
-    def u(s):
-        return s
-
-
-else:  # pragma: nocover
-
-    def n(s, encoding="latin1"):  # noqa
-        if isinstance(s, bytes_type):
-            return s
-        return s.encode(encoding)
-
-    def btos(b, encoding):  # noqa
-        return b.decode(encoding)
-
-    def u(s):
-        return unicode(s, "unicode_escape")  # noqa: F821
-
-
-def b(s, encoding="latin1"):  # pragma: nocover
-    if isinstance(s, bytes_type):
-        return s
-    return s.encode(encoding)
-
-
-# Hash functions
-try:  # pragma: nocover
-    # Python 2.5+
-    from hashlib import md5, sha1, sha224, sha256, sha384, sha512
-
-    def digest_size(d):
-        return d().digest_size
-
-    try:
-        from hashlib import new as openssl_hash
-
-        def ripemd160():
-            return openssl_hash("ripemd160")
-
-        def whirlpool():
-            return openssl_hash("whirlpool")
-
-    except ValueError:
-        ripemd160 = None
-        whirlpool = None
-except ImportError:  # pragma: nocover
-    import md5  # noqa
-    import sha as sha1  # noqa
-
-    sha224 = sha256 = sha384 = sha512 = ripemd160 = whirlpool = None  # noqa
-
-    def digest_size(d):
-        return d.digest_size
+except ValueError:  # pragma: nocover
+    ripemd160 = None
+    whirlpool = None
 
 
 # Encryption interface
@@ -234,3 +170,28 @@ if aes:
 
     def aes256iv(key):
         return aesiv(key, 32)
+
+
+__all__ = (
+    "md5",
+    "sha1",
+    "sha224",
+    "sha256",
+    "sha384",
+    "sha512",
+    "digest_size",
+    "ripemd160",
+    "whirlpool",
+    "block_size",
+    "encrypt",
+    "decrypt",
+    "aes",
+    "aes128",
+    "aes192",
+    "aes256",
+    "aes128iv",
+    "aes192iv",
+    "aes256iv",
+    "AESCipher",
+    "AESIVCipher",
+)

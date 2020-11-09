@@ -9,18 +9,18 @@ class TicketTestCase(unittest.TestCase):
         """Ensure strong key"""
         from base64 import b64encode
 
-        from wheezy.security.crypto.comp import b, n, sha1
+        from wheezy.security.crypto.comp import sha1
         from wheezy.security.crypto.ticket import ensure_strong_key
 
-        k = ensure_strong_key(b(""), sha1)
+        k = ensure_strong_key(b"", sha1)
         assert 60 == len(k)
-        s = n(b64encode(k))
+        s = b64encode(k).decode()
         assert (
             "+9sdGxiqbAgyS31ktx+3Y3BpDh1fA7dyIanFu+fzE/Lc5EaX+NQGs"
             + "KMipy3SvghXaQLqLrLZnSmqEkgv"
             == s
         )
-        s = n(b64encode(ensure_strong_key(b("abc"), sha1)))
+        s = b64encode(ensure_strong_key(b"abc", sha1)).decode()
         assert (
             "WzM6OJtOmiNYrFOSvypk3GjjyUMAcO5Oj0mHXQLAZGmiYN8OZxdtj"
             + "NR1mYddYPy+lo/k53pSG+n7T8hB"
@@ -42,7 +42,7 @@ class TicketTestCase(unittest.TestCase):
             self.encode(cypher=cypher)
 
     def encode(self, cypher):
-        from wheezy.security.crypto.comp import n, sha1
+        from wheezy.security.crypto.comp import sha1
         from wheezy.security.crypto.ticket import Ticket
 
         t = Ticket(digestmod=sha1, cypher=cypher)
@@ -53,7 +53,7 @@ class TicketTestCase(unittest.TestCase):
 
         x = t.encode("hello")
         text, time_left = t.decode(x)
-        assert "hello" == n(text)
+        assert "hello" == text
         assert time_left >= 0
 
         # If cypher is not available verification is still applied.
@@ -67,7 +67,7 @@ class TicketTestCase(unittest.TestCase):
 
         x = t.encode("hello")
         text, time_left = t.decode(x)
-        assert "hello" == n(text)
+        assert "hello" == text
         assert time_left >= 0
 
 
@@ -98,11 +98,10 @@ class TicketDecodeTestCase(unittest.TestCase):
 
     def test_unicode_error(self):
         """Unicode error."""
-        from wheezy.security.crypto.comp import u
         from wheezy.security.crypto.ticket import Ticket
 
         t = Ticket(cypher=None)
-        value = t.encode(u("\u0430"))
+        value = t.encode("\u0430")
         assert (None, None) == t.decode(value, "ascii")
 
     def test_invalid_padding(self):
