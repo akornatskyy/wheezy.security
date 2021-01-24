@@ -2,15 +2,14 @@
 """
 
 import unittest
+from binascii import hexlify, unhexlify
+
+from wheezy.security.crypto.padding import pad, unpad
 
 
 class PaddingTestCase(unittest.TestCase):
     def test_pad(self):
         """Test pad."""
-        from binascii import hexlify
-
-        from wheezy.security.crypto.padding import pad
-
         s = hexlify(pad(b"workbook", 8)).decode()
         assert "776f726b626f6f6b0000000000000008" == s
         s = hexlify(pad(b"for", 8)).decode()
@@ -20,10 +19,6 @@ class PaddingTestCase(unittest.TestCase):
 
     def test_unpad(self):
         """Test unpad."""
-        from binascii import unhexlify
-
-        from wheezy.security.crypto.padding import unpad
-
         s = unhexlify(b"666f720000000005")
         s = unpad(s, 8).decode()
         assert "for" == s

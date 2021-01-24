@@ -3,14 +3,14 @@
 
 import unittest
 
+from wheezy.security.principal import Principal
+
 
 class PrincipalTestCase(unittest.TestCase):
     def test_dump(self):
         """Ensure the principal object is dumped correctly
         with delimiters.
         """
-        from wheezy.security.principal import Principal
-
         p = Principal()
         s = p.dump()
         assert 3 == len(s)
@@ -24,8 +24,6 @@ class PrincipalTestCase(unittest.TestCase):
 
     def test_load(self):
         """"""
-        from wheezy.security.principal import Principal
-
         p = Principal.load("\x1f\x1f\x1f")
         assert p
         assert "" == p.id

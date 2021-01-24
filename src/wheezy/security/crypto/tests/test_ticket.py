@@ -2,16 +2,24 @@
 """
 
 import unittest
+import warnings
+from base64 import b64encode
+
+from wheezy.security.crypto.comp import (
+    aes128,
+    aes128iv,
+    aes192,
+    aes192iv,
+    aes256,
+    aes256iv,
+    sha1,
+)
+from wheezy.security.crypto.ticket import Ticket, ensure_strong_key
 
 
 class TicketTestCase(unittest.TestCase):
     def test_ensure_strong_key(self):
         """Ensure strong key"""
-        from base64 import b64encode
-
-        from wheezy.security.crypto.comp import sha1
-        from wheezy.security.crypto.ticket import ensure_strong_key
-
         k = ensure_strong_key(b"", sha1)
         assert 60 == len(k)
         s = b64encode(k).decode()
@@ -29,22 +37,10 @@ class TicketTestCase(unittest.TestCase):
 
     def test_encode(self):
         """Test ticket encode."""
-        from wheezy.security.crypto.comp import (
-            aes128,
-            aes128iv,
-            aes192,
-            aes192iv,
-            aes256,
-            aes256iv,
-        )
-
         for cypher in [aes128, aes128iv, aes192, aes192iv, aes256, aes256iv]:
             self.encode(cypher=cypher)
 
     def encode(self, cypher):
-        from wheezy.security.crypto.comp import sha1
-        from wheezy.security.crypto.ticket import Ticket
-
         t = Ticket(digestmod=sha1, cypher=cypher)
         if cypher:
             assert len(t.encode("")) >= 72
@@ -73,46 +69,33 @@ class TicketTestCase(unittest.TestCase):
 
 class TicketDecodeTestCase(unittest.TestCase):
     def setUp(self):
-        import warnings
-
         warnings.simplefilter("ignore")
 
     def tearDown(self):
-        import warnings
-
         warnings.simplefilter("default")
 
     def test_invalid_length(self):
         """The value is at least 48 in length."""
-        from wheezy.security.crypto.ticket import Ticket
-
         t = Ticket(cypher=None)
         assert (None, None) == t.decode("a" * 47)
 
     def test_invalid_base64_string(self):
         """Invalid base64 string."""
-        from wheezy.security.crypto.ticket import Ticket
-
         t = Ticket(cypher=None)
         assert (None, None) == t.decode("D" * 57)
 
     def test_unicode_error(self):
         """Unicode error."""
-        from wheezy.security.crypto.ticket import Ticket
-
         t = Ticket(cypher=None)
         value = t.encode("\u0430")
         assert (None, None) == t.decode(value, "ascii")
 
     def test_invalid_padding(self):
         """Invalid padding."""
-        from wheezy.security.crypto.comp import aes128 as cypher
-        from wheezy.security.crypto.ticket import Ticket
-
         t = Ticket(cypher=None)
         value = t.encode("a" * 31)
-        if cypher:
-            t = Ticket(cypher=cypher)
+        if aes128:
+            t = Ticket(cypher=aes128)
             assert (None, None) == t.decode(value)
             assert (None, None) == t.decode(
                 "9zb2S-xu~M54KVqlcnXHzQAvYcMOyzLBWtQm9IQ2NNuWvsWALCU3"
@@ -123,8 +106,6 @@ class TicketDecodeTestCase(unittest.TestCase):
 
     def test_expired(self):
         """Expired."""
-        from wheezy.security.crypto.ticket import Ticket
-
         t = Ticket(cypher=None)
         value = t.encode("test")
         value = "skAtojnOg2DKO66h6m8ZM4IdFI2sF-HVh9~hA76Kl-t0ZXN019MGVQ=="
@@ -132,8 +113,6 @@ class TicketDecodeTestCase(unittest.TestCase):
 
     def test_invalid_verification_key(self):
         """Invalid verification key."""
-        from wheezy.security.crypto.ticket import Ticket
-
         t = Ticket()
         value = t.encode("test")
         t = Ticket(options={"CRYPTO_VALIDATION_KEY": "x"})
@@ -141,13 +120,10 @@ class TicketDecodeTestCase(unittest.TestCase):
 
     def test_invalid_encryption_key(self):
         """Invalid encryption key."""
-        from wheezy.security.crypto.comp import aes128 as cypher
-        from wheezy.security.crypto.ticket import Ticket
-
-        t = Ticket(cypher=cypher)
+        t = Ticket(cypher=aes128)
         value = t.encode("test")
         t = Ticket(options={"CRYPTO_ENCRYPTION_KEY": "x"})
-        if cypher:
+        if aes128:
             assert (None, None) == t.decode(value)
         else:  # pragma: nocover
             assert ("test", 900) == t.decode(value)
