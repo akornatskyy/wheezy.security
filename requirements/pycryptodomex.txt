@@ -4,4 +4,5 @@
 #
 #    pip-compile --output-file=requirements/pycryptodomex.txt requirements/pycryptodomex.in
 #
-pycryptodomex==3.9.9; platform_system != 'Windows' or implementation_name != 'pypy'      # via -r requirements/pycryptodomex.in
+pycryptodomex==3.9.9; platform_system != 'Windows' or implementation_name != 'pypy'
+    # via -r requirements/pycryptodomex.in
