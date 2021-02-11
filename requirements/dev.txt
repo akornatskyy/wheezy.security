@@ -16,7 +16,7 @@ coverage==5.4
     # via pytest-cov
 iniconfig==1.1.1
     # via pytest
-packaging==20.8
+packaging==20.9
     # via pytest
 pip-tools==5.5.0
     # via -r requirements/dev.in
