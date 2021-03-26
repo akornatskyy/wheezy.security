@@ -4,9 +4,9 @@
 #
 #    pip-compile --output-file=requirements/cryptography.txt requirements/cryptography.in
 #
-cffi==1.14.5; platform_system != 'Windows' or implementation_name != 'pypy'
+cffi==1.14.5
     # via cryptography
-cryptography==3.4.6; platform_system != 'Windows' or implementation_name != 'pypy'
+cryptography==3.4.7
     # via -r requirements/cryptography.in
-pycparser==2.20; platform_system != 'Windows' or implementation_name != 'pypy'
+pycparser==2.20
     # via cffi
