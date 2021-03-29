@@ -6,7 +6,7 @@
 #
 cffi==1.14.5; platform_system != 'Windows' or implementation_name != 'pypy'
     # via cryptography
-cryptography==3.4.6; platform_system != 'Windows' or implementation_name != 'pypy'
+cryptography==3.4.7; platform_system != 'Windows' or implementation_name != 'pypy'
     # via -r requirements/cryptography.in
 pycparser==2.20; platform_system != 'Windows' or implementation_name != 'pypy'
     # via cffi
