@@ -19,7 +19,6 @@ try:
     def whirlpool():
         return openssl_hash("whirlpool")  # pragma: nocover
 
-
 except ValueError:  # pragma: nocover
     ripemd160 = None
     whirlpool = None
@@ -84,7 +83,6 @@ try:  # noqa pragma: nocover
         key = key[-key_size:]
         iv = key[:16]
         return lambda: AES.new(key, AES.MODE_CBC, iv)
-
 
 except ImportError:  # pragma: nocover
     try:  # pragma: nocover
