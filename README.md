@@ -32,7 +32,7 @@ Resources:
 ## Install
 
 [wheezy.security](https://pypi.org/project/wheezy.security/) requires
-[python](https://www.python.org) version 3.6+. It is independent of operating
+[python](https://www.python.org) version 3.8+. It is independent of operating
 system. You can install it from
 [pypi](https://pypi.org/project/wheezy.security/) site:
 
