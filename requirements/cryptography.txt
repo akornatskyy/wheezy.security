@@ -4,9 +4,9 @@
 #
 #    pip-compile --output-file=requirements/cryptography.txt --strip-extras requirements/cryptography.in
 #
-cffi==1.15.1
+cffi==1.16.0
     # via cryptography
-cryptography==41.0.3; python_version < '3.10' and implementation_name != 'pypy'
+cryptography==41.0.7; python_version < '3.10' and implementation_name != 'pypy'
     # via -r requirements/cryptography.in
 pycparser==2.21; python_version < '3.10' and implementation_name != 'pypy'
     # via cffi
