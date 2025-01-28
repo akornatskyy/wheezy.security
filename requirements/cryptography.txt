@@ -6,7 +6,7 @@
 #
 cffi==1.17.1
     # via cryptography
-cryptography==44.0.0; python_version < '3.10' and implementation_name != 'pypy'
+cryptography==44.0.1; python_version < '3.10' and implementation_name != 'pypy'
     # via -r requirements/cryptography.in
 pycparser==2.22
     # via cffi
