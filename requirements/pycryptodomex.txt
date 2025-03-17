@@ -4,5 +4,5 @@
 #
 #    pip-compile --output-file=requirements/pycryptodomex.txt --strip-extras requirements/pycryptodomex.in
 #
-pycryptodomex==3.21.0; implementation_name != 'pypy'
+pycryptodomex==3.22.0; implementation_name != 'pypy'
     # via -r requirements/pycryptodomex.in

@@ -4,5 +4,5 @@
 #
 #    pip-compile --output-file=requirements/pycryptodome.txt --strip-extras requirements/pycryptodome.in
 #
-pycryptodome==3.21.0; implementation_name != 'pypy
+pycryptodome==3.22.0; implementation_name != 'pypy
     # via -r requirements/pycryptodome.in
