@@ -4,9 +4,9 @@
 #
 #    pip-compile --output-file=requirements/cryptography.txt --strip-extras requirements/cryptography.in
 #
-cffi==1.17.1
+cffi==2.0.0
     # via cryptography
-cryptography==45.0.6
+cryptography==46.0.3
     # via -r requirements/cryptography.in
-pycparser==2.22
+pycparser==2.23
     # via cffi
