@@ -98,10 +98,12 @@ except ImportError:  # pragma: nocover
         backend = default_backend()
 
         class AESCipher(object):  # pragma: nocover
+
+            block_size = 16
+
             def __init__(self, key, iv):
                 alg = algorithms.AES(key)
                 self.c = Cipher(alg, modes.CBC(iv), backend=backend)
-                self.block_size = alg.block_size
 
             def encrypt(self, v):
                 e = self.c.encryptor()
@@ -124,12 +126,10 @@ except ImportError:  # pragma: nocover
 
             def encrypt(self, v):
                 iv = urandom(16)
-                print("len", len(iv))
                 c = AESCipher(self.key, iv)
                 return iv + c.encrypt(v)
 
             def decrypt(self, v):
-                # print(v)
                 c = AESCipher(self.key, v[:16])
                 return c.decrypt(v[16:])
 
