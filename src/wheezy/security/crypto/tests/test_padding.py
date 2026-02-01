@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.security.crypto.padding``.
-"""
-
 import unittest
 from binascii import hexlify, unhexlify
 

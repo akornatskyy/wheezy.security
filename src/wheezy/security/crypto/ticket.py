@@ -1,6 +1,3 @@
-""" ``crypto`` module.
-"""
-
 from base64 import b64decode, b64encode
 from binascii import Error as BinError
 from hmac import new as hmac_new

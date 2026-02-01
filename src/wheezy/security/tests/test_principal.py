@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.security.principal``.
-"""
-
 import unittest
 
 from wheezy.security.principal import Principal

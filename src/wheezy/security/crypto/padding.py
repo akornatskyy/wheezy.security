@@ -1,9 +1,3 @@
-""" ``padding`` module.
-
-    see http://www.di-mgt.com.au/cryptopad.html
-"""
-
-
 def pad(s, block_size):
     """Pad with zeros except make the last byte equal to the
     number of padding bytes.

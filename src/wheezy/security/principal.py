@@ -1,7 +1,3 @@
-""" ``principal`` module.
-"""
-
-
 class Principal(object):
     """Container of user specific security information"""
 

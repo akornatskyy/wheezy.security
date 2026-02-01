@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.security.authorization``.
-"""
-
 import unittest
 
 from wheezy.security.authorization import authorized

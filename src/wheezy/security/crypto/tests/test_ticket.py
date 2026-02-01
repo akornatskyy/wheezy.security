@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.security.principal``.
-"""
-
 import unittest
 import warnings
 from base64 import b64encode

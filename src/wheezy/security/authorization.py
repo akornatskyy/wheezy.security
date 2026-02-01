@@ -1,6 +1,3 @@
-""" ``authorization`` module.
-"""
-
 from wheezy.security.errors import SecurityError
 
 
