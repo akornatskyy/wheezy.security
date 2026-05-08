@@ -6,7 +6,7 @@
 #
 cffi==2.0.0
     # via cryptography
-cryptography==47.0.0
-    # via -r requirements/cryptography.in
+cryptography==48.0.0
+    # via -r cryptography.in
 pycparser==3.0
     # via cffi
